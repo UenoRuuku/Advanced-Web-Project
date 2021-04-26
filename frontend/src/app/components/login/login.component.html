@@ -1,0 +1,48 @@
+<div style="background: #ececec; padding: 30px; height: 100%">
+  <nz-card
+    style="width: 400px; margin: 150px auto"
+    [nzBordered]="false"
+    nzTitle="登录"
+    [nzExtra]="extraTemplate"
+  >
+    <nz-input-group class="input-group" [nzPrefix]="prefixTemplateUser">
+      <input
+        type="text"
+        [(ngModel)]="username"
+        nz-input
+        placeholder="请输入用户名"
+      />
+    </nz-input-group>
+    <ng-template #prefixTemplateUser><i nz-icon nzType="user"></i></ng-template>
+
+    <nz-input-group class="input-group" [nzSuffix]="suffixTemplate">
+      <input
+        [type]="passwordVisible ? 'text' : 'password'"
+        nz-input
+        placeholder="请输入密码"
+        [(ngModel)]="password"
+      />
+    </nz-input-group>
+    <ng-template #suffixTemplate>
+      <i
+        nz-icon
+        [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+        (click)="passwordVisible = !passwordVisible"
+      ></i>
+    </ng-template>
+
+    <button
+      nz-button
+      nzType="primary"
+      nzBlock
+      style="margin-top: 10px"
+      (click)="onSubmit()"
+      [nzLoading]="loginLoading"
+    >
+      <i nz-icon nzType="login" nzTheme="outline"></i>登录
+    </button>
+  </nz-card>
+</div>
+<ng-template #extraTemplate>
+  <a routerLink="/register">注册</a>
+</ng-template>
