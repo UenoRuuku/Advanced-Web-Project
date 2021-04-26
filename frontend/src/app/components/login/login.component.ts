@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
+import { NzMessageService } from "ng-zorro-antd/message";
 
 @Component({
   selector: "app-login",
@@ -13,9 +13,13 @@ export class LoginComponent {
   password: string = "";
   loginLoading: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private message: NzMessageService) {}
 
   onSubmit() {
+    if (this.username === "" || this.password === ""){
+      this.message.create('warning', `用户名或密码不能为空！`);
+      return;
+    }
     this.loginLoading = true;
     this.http.post("/login", {
       username: this.username,
@@ -24,9 +28,11 @@ export class LoginComponent {
       .subscribe(
         (val) => {
           console.log("success", val);
+          this.loginLoading = false;
         },
         error => {
           console.log("error", error);
+          this.loginLoading = false;
         },
         () => {
           console.log("completed");

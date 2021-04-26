@@ -14,10 +14,12 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 registerLocaleData(en);
 
@@ -26,6 +28,7 @@ registerLocaleData(en);
     AppComponent,
     LayoutComponent,
     LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,9 +42,11 @@ registerLocaleData(en);
     NzInputModule,
     NzIconModule,
     NzButtonModule,
+    NzMessageModule,
     RouterModule.forRoot([
       { path: "", component: LayoutComponent },
       { path: "login", component: LoginComponent },
+      { path: "register", component: RegisterComponent }
     ])
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
