@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,25 +33,31 @@ public class UserController {
     @PostMapping("/login")
     @ApiOperation("登录")
     @ResponseBody
-    public ResponseEntity<Object> login(String username, String password){
+    public ResponseEntity<Map<String,Object>> login(String username, String password){
         LOGGER.info("UserController.login username is {},password is {}",username,password);
         Map<String, String> loginMap = userService.login(username, password);
+        Map<String, Object> resultMap = new HashMap<>();
         if(loginMap == null){
-            return new ResponseEntity<>("用户名或密码错误", HttpStatus.OK);
+            resultMap.put("message","用户名或密码错误");
+            return new ResponseEntity<>(resultMap, HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(loginMap, HttpStatus.OK);
+        resultMap.put("message",loginMap);
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     @ApiOperation("注册")
     @ResponseBody
-    public ResponseEntity<Object> register(User user){
+    public ResponseEntity<Map<String,Object>> register(User user){
         LOGGER.info("UserController.register username is {},password is {},avatar is {}",user.getUsername(),user.getPassword(),user.getAvatar());
+        Map<String, Object> resultMap = new HashMap<>();
         try{
             Map<String, String> map = userService.insertNewUser(user);
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            resultMap.put("message",map);
+            return new ResponseEntity<>(resultMap, HttpStatus.OK);
         }catch (RuntimeException e){
-            return new ResponseEntity<>("注册失败", HttpStatus.OK);
+            resultMap.put("message","注册失败");
+            return new ResponseEntity<>(resultMap, HttpStatus.FORBIDDEN);
         }
     }
 }
