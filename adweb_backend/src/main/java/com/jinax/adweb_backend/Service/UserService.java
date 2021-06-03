@@ -1,7 +1,6 @@
 package com.jinax.adweb_backend.Service;
 
 import com.jinax.adweb_backend.Component.MyUserDetails;
-import com.jinax.adweb_backend.Controller.UserController;
 import com.jinax.adweb_backend.Entity.User;
 import com.jinax.adweb_backend.Repository.UserRepository;
 import com.jinax.adweb_backend.Utils.JwtTokenUtil;
@@ -48,19 +47,12 @@ public class UserService {
         }
         if(passwordEncoder.matches(password,user.get().getPassword())){
             MyUserDetails userDetails = new MyUserDetails(user.get());
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = jwtTokenUtil.generateToken(userDetails);
-            Map<String, String> tokenMap = new HashMap<>();
-            tokenMap.put("token", token);
-            tokenMap.put("tokenHead", tokenHead);
-            tokenMap.put("id", userDetails.getId() + "");
-            return tokenMap;
+            return authUser(userDetails);
         }
         return null;
     }
 
-    public void insertNewUser(User user){
+    public Map<String, String> insertNewUser(User user){
         LOGGER.info("UserService.insertNewUser username is {},password is {}",user.getUsername(),user.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if(user.getAvatar() == null){
@@ -68,10 +60,23 @@ public class UserService {
         }
         try{
             userRepository.save(user);
+            MyUserDetails userDetails = new MyUserDetails(user);
+            return authUser(userDetails);
         }catch (RuntimeException e){
             LOGGER.debug("insertNewUser failed, reason is {}",e.getMessage());
             throw e;
         }
 
+    }
+
+    private Map<String, String> authUser(MyUserDetails userDetails) {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenUtil.generateToken(userDetails);
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", token);
+        tokenMap.put("tokenHead", tokenHead);
+        tokenMap.put("id", userDetails.getId() + "");
+        return tokenMap;
     }
 }

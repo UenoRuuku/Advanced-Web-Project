@@ -32,25 +32,25 @@ public class UserController {
     @PostMapping("/login")
     @ApiOperation("登录")
     @ResponseBody
-    public ResponseEntity<Map<String, String>> login(String username, String password){
+    public ResponseEntity<Object> login(String username, String password){
         LOGGER.info("UserController.login username is {},password is {}",username,password);
         Map<String, String> loginMap = userService.login(username, password);
         if(loginMap == null){
-            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("用户名或密码错误", HttpStatus.OK);
         }
-        return new ResponseEntity<Map<String, String>>(loginMap, HttpStatus.OK);
+        return new ResponseEntity<>(loginMap, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     @ApiOperation("注册")
     @ResponseBody
-    public boolean register(User user){
+    public ResponseEntity<Object> register(User user){
         LOGGER.info("UserController.register username is {},password is {},avatar is {}",user.getUsername(),user.getPassword(),user.getAvatar());
         try{
-            userService.insertNewUser(user);
+            Map<String, String> map = userService.insertNewUser(user);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (RuntimeException e){
-            return false;
+            return new ResponseEntity<>("注册失败", HttpStatus.OK);
         }
-        return true;
     }
 }
