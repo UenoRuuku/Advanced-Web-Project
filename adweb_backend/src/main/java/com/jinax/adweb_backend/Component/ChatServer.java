@@ -62,12 +62,12 @@ public class ChatServer implements WebSocketHandler {
         OutBoundData outBoundData = new OutBoundData(username,inboundData.at,inboundData.message,inboundData.to);
         ObjectMapper mapper = new ObjectMapper();
         String message = mapper.writeValueAsString(outBoundData);
-        BinaryMessage binaryMessage = new BinaryMessage(message.getBytes());
+        TextMessage returnMessage = new TextMessage(message);
         for (WebSocketSession user : users.values()) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
                     try {
-                        user.sendMessage(binaryMessage);
+                        user.sendMessage(returnMessage);
                         break;
                     }catch(IOException e){
                         //do nothing
