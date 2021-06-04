@@ -38,30 +38,34 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        String authHeader = null;
-        if(request.getHeader(this.tokenHeader) != null){
-            authHeader = request.getHeader(this.tokenHeader);
-        };
-        String requestURI = request.getRequestURI().substring(1);
-        String pattern = "(chat|server)/.*";
-        if(Pattern.matches(pattern,requestURI)){
-            int i = requestURI.indexOf("/");
-            authHeader = requestURI.substring(i + 1);
-        }
+        String authHeader = request.getHeader(this.tokenHeader);
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
-            String username = jwtTokenUtil.getUserNameFromToken(authToken);
-            LOGGER.info("checking username:{}", username);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    LOGGER.info("authenticated user:{}", username);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+            authUserByToken(request, authToken);
+        }else{
+            String requestURI = request.getRequestURI().substring(1);
+            String pattern = "(chat|server)/.*";
+            if(Pattern.matches(pattern,requestURI)){
+                int i = requestURI.indexOf("/");
+                String authToken = requestURI.substring(i + 1);
+                authUserByToken(request, authToken);
             }
+
         }
         chain.doFilter(request, response);
+    }
+
+    private void authUserByToken(HttpServletRequest request, String authToken) {
+        String username = jwtTokenUtil.getUserNameFromToken(authToken);
+        LOGGER.info("checking username:{}", username);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                LOGGER.info("authenticated user:{}", username);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
     }
 }
