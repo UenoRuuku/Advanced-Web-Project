@@ -41,9 +41,6 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
         if(session.isOpen()){
             session.close();
         }
-        synchronized (this){
-            users.remove(session);
-        }
     }
 
     @Override

@@ -6,18 +6,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 public class ChatServer implements WebSocketHandler {
-    private static final ConcurrentHashMap<String,WebSocketSession> users = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<WebSocketSession,String> sessionToUsers = new ConcurrentHashMap<>();
+    private static final HashMap<String,WebSocketSession> users = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatServer.class);
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String username = (String) session.getAttributes().get("username");
-        users.put(username,session);
-        sessionToUsers.put(session,username);
+        users.put((String) session.getAttributes().get("username"),session);
         LOGGER.info("ConnectionEstablished"+"=>当前在线用户的数量是:{}",users.size());
     }
 
@@ -25,8 +22,9 @@ public class ChatServer implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             session.close(CloseStatus.POLICY_VIOLATION);
+
         }
-        String username = sessionToUsers.get(session);
+        String username = (String) session.getAttributes().get("username");
         TextMessage returnMessage = new TextMessage(username + " : " + message.getPayload());
 
         sendMessageToUsers(returnMessage);
@@ -41,8 +39,7 @@ public class ChatServer implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        users.remove(sessionToUsers.get(session));
-        sessionToUsers.remove(session);
+        users.remove((String) session.getAttributes().get("username"));
         LOGGER.info("ConnectionClosed"+"=>当前在线用户的数量是:{}",users.size());
 
     }
@@ -58,7 +55,7 @@ public class ChatServer implements WebSocketHandler {
      */
     public void sendMessageToUsers(TextMessage message) {
         //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
-        for (WebSocketSession user : sessionToUsers.keySet()) {
+        for (WebSocketSession user : users.values()) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
                     try {
