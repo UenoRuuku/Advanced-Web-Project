@@ -6,18 +6,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatServer implements WebSocketHandler {
-
-    private static final ArrayList<WebSocketSession> users = new ArrayList<WebSocketSession>();;
+    private static final ConcurrentHashMap<String,WebSocketSession> users = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<WebSocketSession,String> sessionToUsers = new ConcurrentHashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatServer.class);
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        synchronized (this){
-            users.add(session);
-        }
+        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        users.put(username,session);
+        sessionToUsers.put(session,username);
         LOGGER.info("ConnectionEstablished"+"=>当前在线用户的数量是:{}",users.size());
     }
 
@@ -25,11 +25,10 @@ public class ChatServer implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             session.close(CloseStatus.POLICY_VIOLATION);
-            synchronized (this){
-                users.remove(session);
-            }
+            users.remove(sessionToUsers.get(session));
+            sessionToUsers.remove(session);
         }
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = sessionToUsers.get(session);
         TextMessage returnMessage = new TextMessage(username + " : " + message.getPayload());
 
         sendMessageToUsers(returnMessage);
@@ -40,16 +39,14 @@ public class ChatServer implements WebSocketHandler {
         if(session.isOpen()){
             session.close();
         }
-        synchronized (this){
-            users.remove(session);
-        }
+        users.remove(sessionToUsers.get(session));
+        sessionToUsers.remove(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        synchronized (this){
-            users.remove(session);
-        }
+        users.remove(sessionToUsers.get(session));
+        sessionToUsers.remove(session);
         LOGGER.info("ConnectionClosed"+"=>当前在线用户的数量是:{}",users.size());
 
     }
@@ -65,7 +62,7 @@ public class ChatServer implements WebSocketHandler {
      */
     public void sendMessageToUsers(TextMessage message) {
         //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
-        for (WebSocketSession user : users) {
+        for (WebSocketSession user : sessionToUsers.keySet()) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
                     try {
