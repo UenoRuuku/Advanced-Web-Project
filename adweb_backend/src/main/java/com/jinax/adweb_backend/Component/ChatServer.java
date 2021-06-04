@@ -27,7 +27,10 @@ public class ChatServer implements WebSocketHandler {
         String username = (String) session.getAttributes().get("username");
         LOGGER.info("Data from {}"+"=>{}",username,message.getPayload());
         InboundData inboundData = JSON.parseObject((String) message.getPayload(), InboundData.class, JsonFactory.Feature.collectDefaults());
-        sendMessageToUsers(session,inboundData);
+        if(inboundData.getTo().isEmpty()){
+            sendMessageToUsers(session,inboundData);
+        }
+
     }
 
     @Override
@@ -81,6 +84,9 @@ public class ChatServer implements WebSocketHandler {
         @JSONField(name = "to")
         private List<String> to;
 
+        public InboundData() {
+        }
+
         public InboundData(String message, List<String> at, List<String> to) {
             this.message = message;
             this.at = at;
@@ -121,6 +127,10 @@ public class ChatServer implements WebSocketHandler {
         private String message;
         @JSONField(name = "to")
         private List<String> to;
+
+
+        public OutBoundData() {
+        }
 
         public OutBoundData(String author, List<String> at, String message, List<String> to) {
             this.author = author;
