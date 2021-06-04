@@ -20,6 +20,18 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { httpInterceptorProviders } from './http-interceptors/index';
+import { GameComponent } from './game/game.component';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { ChatComponent } from './components/chat/chat.component';
+import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
+
+const ngZorroConfig: NzConfig = {
+  // 注意组件名称没有 nz 前缀
+  message: { nzTop: 120 },
+  notification: { nzTop: 240 }
+};
 
 registerLocaleData(en);
 
@@ -29,6 +41,8 @@ registerLocaleData(en);
     LayoutComponent,
     LoginComponent,
     RegisterComponent,
+    GameComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,13 +57,20 @@ registerLocaleData(en);
     NzIconModule,
     NzButtonModule,
     NzMessageModule,
+    NzGridModule,
+    NzDividerModule,
     RouterModule.forRoot([
-      { path: "", component: LayoutComponent },
+      { path: "", component: LayoutComponent,
+        children: [{
+          path: 'game', component: GameComponent,
+          //path: '/profile', component: ProfileComponent,
+        }],
+    },
       { path: "login", component: LoginComponent },
       { path: "register", component: RegisterComponent }
     ])
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [{ provide: NZ_I18N, useValue: en_US }, httpInterceptorProviders, { provide: NZ_CONFIG, useValue: ngZorroConfig }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
