@@ -1,0 +1,10 @@
+<div id="chat-box"></div>
+<nz-divider style="margin: 10px 0"></nz-divider>
+<div nz-row [nzGutter]="16">
+    <div nz-col nzSpan="19">
+        <input nz-input placeholder="Your message" [(ngModel)]="messageValue" />
+    </div>
+    <div nz-col nzSpan="5">
+        <button nz-button nzType="primary">Send</button>
+    </div>
+</div>
