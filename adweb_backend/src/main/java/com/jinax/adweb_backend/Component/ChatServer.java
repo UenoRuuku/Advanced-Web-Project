@@ -1,12 +1,17 @@
 package com.jinax.adweb_backend.Component;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.core.JsonFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.*;
+
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 public class ChatServer implements WebSocketHandler {
     private static final HashMap<String,WebSocketSession> users = new HashMap<>();
@@ -20,13 +25,10 @@ public class ChatServer implements WebSocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        if(SecurityContextHolder.getContext().getAuthentication() == null) {
-            session.close(CloseStatus.POLICY_VIOLATION);
-
-        }
         String username = (String) session.getAttributes().get("username");
-        TextMessage returnMessage = new TextMessage(username + " : " + message.getPayload());
-
+        LOGGER.info("Data from {}"+"=>{}",username,message.getPayload());
+        InboundData inboundData = JSON.parseObject((String) message.getPayload(), InboundData.class, JsonFactory.Feature.collectDefaults());
+        TextMessage returnMessage = new TextMessage(username + " : " + inboundData.getMessage());
         sendMessageToUsers(returnMessage);
     }
 
@@ -69,4 +71,31 @@ public class ChatServer implements WebSocketHandler {
         }
     }
 
+    private class InboundData{
+        @JSONField(name="message")
+        private String message;
+        @JSONField(name = "at")
+        private List<String> at;
+
+        public InboundData(String message, List<String> at) {
+            this.message = message;
+            this.at = at;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public List<String> getAt() {
+            return at;
+        }
+
+        public void setAt(List<String> at) {
+            this.at = at;
+        }
+    }
 }
