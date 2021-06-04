@@ -3,6 +3,8 @@ package com.jinax.adweb_backend.Component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.graalvm.compiler.graph.spi.Canonicalizable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,8 @@ public class ChatServer implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         String username = (String) session.getAttributes().get("username");
         LOGGER.info("Data from {}"+"=>{}",username,message.getPayload());
-        InboundData inboundData = JSON.parseObject((String) message.getPayload(), InboundData.class, JsonFactory.Feature.collectDefaults());
+        ObjectMapper mapper = new ObjectMapper();
+        InboundData inboundData = mapper.readValue((String) message.getPayload(),InboundData.class);
         if(inboundData.getTo().isEmpty()){
             sendMessageToUsers(session,inboundData);
         }
@@ -57,13 +60,13 @@ public class ChatServer implements WebSocketHandler {
      * 给所有在线用户发送消息
      * @param inboundData 收到的信息
      */
-    public void sendMessageToUsers(WebSocketSession session,InboundData inboundData) {
+    public void sendMessageToUsers(WebSocketSession session,InboundData inboundData) throws JsonProcessingException {
         //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
         String username = (String) session.getAttributes().get("username");
         OutBoundData outBoundData = new OutBoundData(username,inboundData.at,inboundData.message,inboundData.to);
-        String message = JSON.toJSONString(outBoundData);
+        ObjectMapper mapper = new ObjectMapper();
+        String message = mapper.writeValueAsString(outBoundData);
         BinaryMessage binaryMessage = new BinaryMessage(message.getBytes());
-//        TextMessage returnMessage = new TextMessage(message);
         for (WebSocketSession user : users.values()) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
@@ -79,11 +82,8 @@ public class ChatServer implements WebSocketHandler {
     }
 
     private static class InboundData{
-        @JSONField(name="message")
         private String message;
-        @JSONField(name = "at")
         private List<String> at;
-        @JSONField(name = "to")
         private List<String> to;
 
         public InboundData() {
@@ -121,13 +121,9 @@ public class ChatServer implements WebSocketHandler {
     }
 
     private static class OutBoundData{
-        @JSONField(name="author")
         private String author;
-        @JSONField(name="at")
         private List<String> at;
-        @JSONField(name="message")
         private String message;
-        @JSONField(name = "to")
         private List<String> to;
 
 
