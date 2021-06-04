@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * JWT登录授权过滤器
@@ -37,7 +38,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        String authHeader = request.getHeader(this.tokenHeader);
+        String authHeader = null;
+        if(request.getHeader(this.tokenHeader) != null){
+            authHeader = request.getHeader(this.tokenHeader);
+        };
+        String requestURI = request.getRequestURI().substring(1);
+        String pattern = "(chat|server)/.*";
+        if(Pattern.matches(pattern,requestURI)){
+            int i = requestURI.indexOf("/");
+            authHeader = requestURI.substring(i + 1);
+        }
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
             String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
