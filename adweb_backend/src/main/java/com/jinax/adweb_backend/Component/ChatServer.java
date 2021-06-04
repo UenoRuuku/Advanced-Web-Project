@@ -27,7 +27,7 @@ public class ChatServer implements WebSocketHandler {
         String username = (String) session.getAttributes().get("username");
         LOGGER.info("Data from {}"+"=>{}",username,message.getPayload());
         InboundData inboundData = JSON.parseObject((String) message.getPayload(), InboundData.class, JsonFactory.Feature.collectDefaults());
-        sendMessageToUsers(inboundData);
+        sendMessageToUsers(session,inboundData);
     }
 
     @Override
