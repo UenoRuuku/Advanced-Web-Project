@@ -27,7 +27,7 @@ public class ChatServer implements WebSocketHandler {
         LOGGER.info("Data from {}"+"=>{}",username,message.getPayload());
         ObjectMapper mapper = new ObjectMapper();
         InboundData inboundData = mapper.readValue((String) message.getPayload(),InboundData.class);
-        if(inboundData.getTo().isEmpty()){
+        if(inboundData.getTo() == null){
             sendMessageToUsers(session,inboundData);
         }
 
