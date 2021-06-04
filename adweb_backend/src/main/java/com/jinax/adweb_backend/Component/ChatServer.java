@@ -1,27 +1,33 @@
 package com.jinax.adweb_backend.Component;
-import com.jinax.adweb_backend.Entity.User;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class OneToManyWebSocketHandler implements WebSocketHandler {
+public class ChatServer implements WebSocketHandler {
 
     private static final ArrayList<WebSocketSession> users = new ArrayList<WebSocketSession>();;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChatServer.class);
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-        users.add(session);
-        System.out.println("ConnectionEstablished"+"=>当前在线用户的数量是:"+users.size());
+        synchronized (this){
+            users.add(session);
+        }
+        LOGGER.info("ConnectionEstablished"+"=>当前在线用户的数量是:{}",users.size());
     }
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             session.close(CloseStatus.POLICY_VIOLATION);
-            users.remove(session);
+            synchronized (this){
+                users.remove(session);
+            }
         }
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         TextMessage returnMessage = new TextMessage(username + " : " + message.getPayload());
@@ -34,14 +40,17 @@ public class OneToManyWebSocketHandler implements WebSocketHandler {
         if(session.isOpen()){
             session.close();
         }
-        users.remove(session);
+        synchronized (this){
+            users.remove(session);
+        }
     }
 
-
+    @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-
-        users.remove(session);
-        System.out.println("ConnectionClosed"+"=>当前在线用户的数量是:"+users.size());
+        synchronized (this){
+            users.remove(session);
+        }
+        LOGGER.info("ConnectionClosed"+"=>当前在线用户的数量是:{}",users.size());
 
     }
 
@@ -55,6 +64,7 @@ public class OneToManyWebSocketHandler implements WebSocketHandler {
      * @param message message
      */
     public void sendMessageToUsers(TextMessage message) {
+        //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
         for (WebSocketSession user : users) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {

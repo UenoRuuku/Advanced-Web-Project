@@ -1,6 +1,9 @@
 package com.jinax.adweb_backend.Config;
 
-import com.jinax.adweb_backend.Component.OneToManyWebSocketHandler;
+import com.jinax.adweb_backend.Component.HanoiWebSocketHandler;
+import com.jinax.adweb_backend.Component.ChatServer;
+import com.jinax.adweb_backend.Component.Tower.Hanoi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
@@ -12,15 +15,27 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    @Value("${hanoi.numTowers}")
+    private int numTowers;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myHandler(), "/webSocketServer").setAllowedOrigins("*");
+        registry.addHandler(chatHandler(), "/chat").setAllowedOrigins("*");
+        registry.addHandler(hanoiHandler(),"/hanoi").setAllowedOrigins("*");
     }
 
+    @Bean
+    public Hanoi hanoi(){
+        return new Hanoi(numTowers);
+    }
 
     @Bean
-    public WebSocketHandler myHandler() {
-        return new OneToManyWebSocketHandler();
+    public WebSocketHandler chatHandler() {
+        return new ChatServer();
+    }
+
+    @Bean
+    public WebSocketHandler hanoiHandler() {
+        return new HanoiWebSocketHandler(hanoi());
     }
 }
