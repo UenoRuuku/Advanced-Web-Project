@@ -2,7 +2,6 @@ package com.jinax.adweb_backend.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.core.JsonFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +27,7 @@ public class ChatServer implements WebSocketHandler {
         String username = (String) session.getAttributes().get("username");
         LOGGER.info("Data from {}"+"=>{}",username,message.getPayload());
         InboundData inboundData = JSON.parseObject((String) message.getPayload(), InboundData.class, JsonFactory.Feature.collectDefaults());
-        TextMessage returnMessage = new TextMessage(username + " : " + inboundData.getMessage());
-        sendMessageToUsers(returnMessage);
+        sendMessageToUsers(inboundData);
     }
 
     @Override
@@ -53,15 +51,19 @@ public class ChatServer implements WebSocketHandler {
 
     /**
      * 给所有在线用户发送消息
-     * @param message message
+     * @param inboundData 收到的信息
      */
-    public void sendMessageToUsers(TextMessage message) {
+    public void sendMessageToUsers(WebSocketSession session,InboundData inboundData) {
         //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
+        String username = (String) session.getAttributes().get("username");
+        OutBoundData outBoundData = new OutBoundData(username,inboundData.at,inboundData.message,inboundData.to);
+        String message = JSON.toJSONString(outBoundData);
+        TextMessage returnMessage = new TextMessage(message);
         for (WebSocketSession user : users.values()) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
                     try {
-                        user.sendMessage(message);
+                        user.sendMessage(returnMessage);
                         break;
                     }catch(IOException e){
                         //do nothing
@@ -71,15 +73,18 @@ public class ChatServer implements WebSocketHandler {
         }
     }
 
-    private class InboundData{
+    private static class InboundData{
         @JSONField(name="message")
         private String message;
         @JSONField(name = "at")
         private List<String> at;
+        @JSONField(name = "to")
+        private List<String> to;
 
-        public InboundData(String message, List<String> at) {
+        public InboundData(String message, List<String> at, List<String> to) {
             this.message = message;
             this.at = at;
+            this.to = to;
         }
 
         public String getMessage() {
@@ -96,6 +101,64 @@ public class ChatServer implements WebSocketHandler {
 
         public void setAt(List<String> at) {
             this.at = at;
+        }
+
+        public List<String> getTo() {
+            return to;
+        }
+
+        public void setTo(List<String> to) {
+            this.to = to;
+        }
+    }
+
+    private static class OutBoundData{
+        @JSONField(name="author")
+        private String author;
+        @JSONField(name="at")
+        private List<String> at;
+        @JSONField(name="message")
+        private String message;
+        @JSONField(name = "to")
+        private List<String> to;
+
+        public OutBoundData(String author, List<String> at, String message, List<String> to) {
+            this.author = author;
+            this.at = at;
+            this.message = message;
+            this.to = to;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public List<String> getAt() {
+            return at;
+        }
+
+        public void setAt(List<String> at) {
+            this.at = at;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public List<String> getTo() {
+            return to;
+        }
+
+        public void setTo(List<String> to) {
+            this.to = to;
         }
     }
 }
