@@ -38,6 +38,11 @@ public class UserService {
         return byId.orElse(null);
     }
 
+    public User findByUserName(String username){
+        Optional<User> userByUsernameEquals = userRepository.findUserByUsernameEquals(username);
+        return userByUsernameEquals.orElse(null);
+    }
+
     public Map<String, String> login(String username, String password){
         LOGGER.info("UserService.login username is {},password is {}",username,password);
         Optional<User> user = userRepository.findUserByUsernameEquals(username);

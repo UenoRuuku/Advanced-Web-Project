@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // the name here is indeed identification
             @Override
             public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-                User user = userService.findById(Integer.parseInt(s));
+                User user = userService.findByUserName(s);
                 return new MyUserDetails(user);
             }
         };
