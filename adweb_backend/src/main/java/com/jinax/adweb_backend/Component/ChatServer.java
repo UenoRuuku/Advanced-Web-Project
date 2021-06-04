@@ -3,6 +3,7 @@ package com.jinax.adweb_backend.Component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.core.JsonFactory;
+import org.graalvm.compiler.graph.spi.Canonicalizable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.*;
@@ -61,12 +62,13 @@ public class ChatServer implements WebSocketHandler {
         String username = (String) session.getAttributes().get("username");
         OutBoundData outBoundData = new OutBoundData(username,inboundData.at,inboundData.message,inboundData.to);
         String message = JSON.toJSONString(outBoundData);
-        TextMessage returnMessage = new TextMessage(message);
+        BinaryMessage binaryMessage = new BinaryMessage(message.getBytes());
+//        TextMessage returnMessage = new TextMessage(message);
         for (WebSocketSession user : users.values()) {
             if (user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
                     try {
-                        user.sendMessage(returnMessage);
+                        user.sendMessage(binaryMessage);
                         break;
                     }catch(IOException e){
                         //do nothing
