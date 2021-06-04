@@ -15,7 +15,7 @@ public class ChatServer implements WebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = (String) session.getAttributes().get("username");
         users.put(username,session);
         sessionToUsers.put(session,username);
         LOGGER.info("ConnectionEstablished"+"=>当前在线用户的数量是:{}",users.size());
@@ -25,8 +25,6 @@ public class ChatServer implements WebSocketHandler {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
         if(SecurityContextHolder.getContext().getAuthentication() == null) {
             session.close(CloseStatus.POLICY_VIOLATION);
-            users.remove(sessionToUsers.get(session));
-            sessionToUsers.remove(session);
         }
         String username = sessionToUsers.get(session);
         TextMessage returnMessage = new TextMessage(username + " : " + message.getPayload());
@@ -39,8 +37,6 @@ public class ChatServer implements WebSocketHandler {
         if(session.isOpen()){
             session.close();
         }
-        users.remove(sessionToUsers.get(session));
-        sessionToUsers.remove(session);
     }
 
     @Override

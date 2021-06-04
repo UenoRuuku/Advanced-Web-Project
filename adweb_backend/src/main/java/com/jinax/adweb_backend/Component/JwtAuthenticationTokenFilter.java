@@ -49,6 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 int i = requestURI.indexOf("/");
                 String authToken = requestURI.substring(i + 1);
                 authUserByToken(request, authToken);
+                request.setAttribute("username",jwtTokenUtil.getUserNameFromToken(authToken));
             }
 
         }
