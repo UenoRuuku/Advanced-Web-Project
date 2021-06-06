@@ -11,9 +11,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class ChatServer implements WebSocketHandler {
     private static final HashMap<String,WebSocketSession> users = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatServer.class);
+    private static final ExecutorService pool = Executors.newFixedThreadPool(5);
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -29,6 +35,8 @@ public class ChatServer implements WebSocketHandler {
         InboundData inboundData = mapper.readValue((String) message.getPayload(),InboundData.class);
         if(inboundData.getTo() == null){
             sendMessageToUsers(session,inboundData);
+        }else{
+            sendMessage(session,inboundData);
         }
 
     }
@@ -53,27 +61,61 @@ public class ChatServer implements WebSocketHandler {
     }
 
     /**
+     * 给特定用户发送
+     * @param session session
+     * @param inboundData 收到的信息
+     * @throws JsonProcessingException json exception, should not happen
+     */
+    private void sendMessage(WebSocketSession session,InboundData inboundData) throws JsonProcessingException {
+        List<String> toUsers = inboundData.getTo();
+        TextMessage returnMessage = getTextMessage(session, inboundData);
+        for(String user:toUsers){
+            pool.submit(new SendMessageTask(users.get(user), returnMessage));// omit the future returned
+        }
+
+    }
+
+    /**
      * 给所有在线用户发送消息
      * @param inboundData 收到的信息
      */
-    public void sendMessageToUsers(WebSocketSession session,InboundData inboundData) throws JsonProcessingException {
+    private void sendMessageToUsers(WebSocketSession session,InboundData inboundData) throws JsonProcessingException {
         //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
+        TextMessage returnMessage = getTextMessage(session, inboundData);
+        for (WebSocketSession user : users.values()) {
+            pool.submit(new SendMessageTask(user,returnMessage));// omit the future returned
+        }
+    }
+
+    private TextMessage getTextMessage(WebSocketSession session, InboundData inboundData) throws JsonProcessingException {
         String username = (String) session.getAttributes().get("username");
-        OutBoundData outBoundData = new OutBoundData(username,inboundData.at,inboundData.message,inboundData.to);
+        OutBoundData outBoundData = new OutBoundData(username, inboundData.at, inboundData.message, inboundData.to);
         ObjectMapper mapper = new ObjectMapper();
         String message = mapper.writeValueAsString(outBoundData);
-        TextMessage returnMessage = new TextMessage(message);
-        for (WebSocketSession user : users.values()) {
-            if (user.isOpen()) {
+        return new TextMessage(message);
+    }
+
+    private static class SendMessageTask implements Callable<Boolean>{
+        private final WebSocketSession user;
+        private final  TextMessage returnMessage;
+        public SendMessageTask(WebSocketSession user,  TextMessage returnMessage) {
+            this.user = user;
+            this.returnMessage = returnMessage;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+            if (user != null && user.isOpen()) {
                 for (int i = 0; i < 5; i++) {
                     try {
                         user.sendMessage(returnMessage);
-                        break;
+                        return true;
                     }catch(IOException e){
                         //do nothing
                     }
                 }
             }
+            return false;
         }
     }
 
