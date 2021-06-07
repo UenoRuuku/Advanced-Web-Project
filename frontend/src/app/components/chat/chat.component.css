@@ -1,5 +1,5 @@
 #chat-box {
-  height: 460px !important;
+  height: 410px !important;
   overflow-y: scroll;
   width: 100%;
 }
@@ -49,4 +49,9 @@
 #send-message{
   height: 32px;
   padding-top: 8px;
+}
+
+.avatar-group{
+  margin: 8px 0;
+  display: block;
 }

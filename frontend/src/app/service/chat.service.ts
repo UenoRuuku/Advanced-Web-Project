@@ -13,12 +13,14 @@ export class ChatService {
     this.messages = <Subject<any>>(
       wsService.connect(CHAT_URL_BASE+`/${localStorage.getItem("token")}`).map((response: MessageEvent): any => {
         let data = JSON.parse(response.data);
-        return {
-          author: data.author,
-          at: data.at,
-          to: data.to,
-          message: data.message,
-        };
+        console.log(data)
+        if(data.users){
+          data.type="userList";
+          return data;
+        }else if(data.message){
+          data.type="message";
+          return data;
+        }
       })
     );
   }

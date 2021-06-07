@@ -27,6 +27,9 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ChatComponent } from './components/chat/chat.component';
 import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
 import { MessageComponent } from './message/message.component';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { NzMentionModule } from 'ng-zorro-antd/mention';
 
 const ngZorroConfig: NzConfig = {
   // 注意组件名称没有 nz 前缀
@@ -55,11 +58,14 @@ registerLocaleData(en);
     NzLayoutModule,
     NzMenuModule,
     NzCardModule,
+    NzAvatarModule,
     NzInputModule,
+    NzPopoverModule,
     NzIconModule,
     NzButtonModule,
     NzMessageModule,
     NzGridModule,
+    NzMentionModule,
     NzDividerModule,
     RouterModule.forRoot([
       { path: "", component: LayoutComponent,
