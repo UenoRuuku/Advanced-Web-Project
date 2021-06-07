@@ -86,10 +86,12 @@ public class ChatServer implements WebSocketHandler {
      */
     private void sendMessage(WebSocketSession session,InboundData inboundData) throws JsonProcessingException {
         List<String> toUsers = inboundData.getTo();
+        //同时也要发给自己
         TextMessage returnMessage = getTextMessage(session, inboundData);
         for(String user:toUsers){
             pool.submit(new SendMessageTask(users.get(user), returnMessage));// omit the future returned
         }
+        pool.submit(new SendMessageTask(session, returnMessage));// 也给自己发一份，很恶心，请问lyq
 
     }
 
