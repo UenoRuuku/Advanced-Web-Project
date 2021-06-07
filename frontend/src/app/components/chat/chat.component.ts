@@ -38,6 +38,7 @@ export class ChatComponent implements OnInit {
       msg.time = moment(new Date).format("hh:mm");
       this.showingMessages.push(msg);
     });
+    this.updateOverflowMessages();
   }
 
   ngOnInit(): void {}
@@ -50,5 +51,17 @@ export class ChatComponent implements OnInit {
       to: null,
       message: "",
     };
+  }
+
+  updateOverflowMessages(): void{
+    setInterval(function() {
+      let messagesWrapper = document.getElementById("messages-wrapper");
+      let chatBox = document.getElementById("chat-box");
+      if(chatBox.scrollTop>=messagesWrapper.scrollHeight){
+        chatBox.scrollTop = 0;
+      }else{
+        chatBox.scrollTop = messagesWrapper.scrollHeight;
+      }
+    },1);
   }
 }

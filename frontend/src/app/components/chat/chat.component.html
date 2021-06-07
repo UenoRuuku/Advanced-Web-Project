@@ -1,17 +1,19 @@
 <div id="chat-box">
-  <div *ngFor="let message of showingMessages" class="chat-line">
-    <div *ngIf="!message.isMyself">
-      <div class="chat-message-author">{{ message.author }}</div>
-      <div class="chat-message-body">
-        {{ message.message }}
-        <p class="chat-message-time">{{ message.time }}</p>
+  <div id="messages-wrapper" style="margin: 0; padding: 0">
+    <div *ngFor="let message of showingMessages" class="chat-line">
+      <div *ngIf="!message.isMyself">
+        <div class="chat-message-author">{{ message.author }}</div>
+        <div class="chat-message-body">
+          {{ message.message }}
+          <p class="chat-message-time">{{ message.time }}</p>
+        </div>
       </div>
-    </div>
-    <div *ngIf="message.isMyself" class="chat-myself-wrapper">
-      <div class="chat-message-author">{{ message.author }}</div>
-      <div class="chat-message-body chat-message-body-myself">
-        {{ message.message }}
-        <p class="chat-message-time">{{ message.time }}</p>
+      <div *ngIf="message.isMyself" class="chat-myself-wrapper">
+        <div class="chat-message-author">{{ message.author }}</div>
+        <div class="chat-message-body chat-message-body-myself">
+          {{ message.message }}
+          <p class="chat-message-time">{{ message.time }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -23,9 +25,10 @@
       placeholder="请输入..."
       [(ngModel)]="sendingMessage.message"
       (keyup.enter)="sendMessage()"
+      style="width: 100%"
     />
   </div>
   <div nz-col nzSpan="5">
-    <button nz-button nzType="primary" (click)="sendMessage()" style="width: 100%;">发送</button>
+    <button nz-button nzType="primary" (click)="sendMessage()">发送</button>
   </div>
 </div>

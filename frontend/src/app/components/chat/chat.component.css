@@ -45,3 +45,8 @@
   transform: scale(0.8);
   margin: 0 0 0 5px;
 }
+
+#send-message{
+  height: 32px;
+  padding-top: 8px;
+}
