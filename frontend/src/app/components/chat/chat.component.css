@@ -55,3 +55,8 @@
   margin: 8px 0;
   display: block;
 }
+
+.pm-lock{
+  margin-left: 5px;
+  color: grey;
+}

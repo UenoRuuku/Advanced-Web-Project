@@ -107,4 +107,21 @@ export class ChatComponent implements OnInit {
     this.onSelect(user)
     this.sendingMessage.message = `@${user} `+this.sendingMessage.message;
   }
+
+  onTo(user: string): void {
+    console.log("onTo "+user)
+    this.sendingMessage.to = Array.from(new Set(this.sendingMessage.to).add(user))
+  }
+
+  buttonTo(user): void{
+    this.onTo(user)
+  }
+
+  isPM(message): boolean{
+    return new Set(message.to).has(localStorage.getItem('username'))
+  }
+
+  isMyPM(message): boolean{
+    return message.to
+  }
 }

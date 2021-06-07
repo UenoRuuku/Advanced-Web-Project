@@ -2,14 +2,14 @@
   <div id="messages-wrapper" style="margin: 0; padding: 0">
     <div *ngFor="let message of showingMessages" class="chat-line">
       <div *ngIf="!message.isMyself">
-        <div class="chat-message-author">{{ message.author }}</div>
+        <div class="chat-message-author">{{ message.author }}<i *ngIf="isPM(message)" class="pm-lock" nz-icon nzType="lock" nzTheme="outline"></i></div>
         <div class="chat-message-body">
           {{ message.message }}
           <p class="chat-message-time">{{ message.time }}</p>
         </div>
       </div>
       <div *ngIf="message.isMyself" class="chat-myself-wrapper">
-        <div class="chat-message-author">{{ message.author }}</div>
+        <div class="chat-message-author">{{ message.author }}<i *ngIf="isMyPM(message)" class="pm-lock" nz-icon nzType="lock" nzTheme="outline"></i></div>
         <div class="chat-message-body chat-message-body-myself">
           {{ message.message }}
           <p class="chat-message-time">{{ message.time }}</p>
@@ -28,7 +28,7 @@
     [nzPopoverContent]="contentTemplate"
     ><ng-template #contentTemplate>
       <button nzButton (click)="buttonAt(user)">@ 提及</button>
-      <button nzButton style="margin-left: 25px">
+      <button nzButton style="margin-left: 25px" (click)="buttonTo(user)">
         <i nz-icon nzType="message" nzTheme="outline"></i> 私信
       </button>
     </ng-template>
@@ -37,7 +37,8 @@
 <div id="send-message" nz-row [nzGutter]="16">
   <div nz-col nzSpan="19">
     <nz-mention [nzSuggestions]="userList" (nzOnSelect)="onSelect($event)">
-      <input
+      <nz-input-group [nzPrefix]="prefixTemplateUser">
+        <input
         nz-input
         nzMentionTrigger
         placeholder="请输入..."
@@ -45,6 +46,10 @@
         (keyup.enter)="sendMessage()"
         style="width: 100%"
       />
+      </nz-input-group>
+      <ng-template #prefixTemplateUser>
+        <span *ngIf="sendingMessage.to">与 {{sendingMessage.to.join("、")}} 的私信</span>
+      </ng-template>
     </nz-mention>
   </div>
   <div nz-col nzSpan="5">
