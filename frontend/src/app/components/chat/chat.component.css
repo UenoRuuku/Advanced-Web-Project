@@ -1,6 +1,11 @@
 #chat-box {
   height: 460px !important;
   overflow-y: scroll;
+  width: 100%;
+}
+
+#chat-box::-webkit-scrollbar{
+  display: none;
 }
 
 .chat-line {
@@ -31,7 +36,7 @@
 }
 
 .chat-message-body-myself {
-  background-color: 			#F8F8FF;
+  background-color:#F8F8FF;
 }
 
 .chat-message-time{
