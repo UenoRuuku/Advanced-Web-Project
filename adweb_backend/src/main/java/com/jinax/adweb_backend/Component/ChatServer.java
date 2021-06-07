@@ -7,15 +7,35 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.*;
 
 
-import java.util.List;
+import java.util.*;
 
-import java.util.Map;
 import java.util.concurrent.*;
 
 public class ChatServer implements WebSocketHandler {
     private static final Map<String,WebSocketSession> users = new ConcurrentHashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatServer.class);
     private static final ExecutorService pool = Executors.newFixedThreadPool(5);
+    private static final Timer timer = new Timer();
+
+    public ChatServer() {
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                List<String> userList = new ArrayList<>(users.keySet());
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    String userListString = mapper.writeValueAsString(userList);
+                    users.values().forEach((user)->{
+                        pool.submit(new SendMessageTask(user,new TextMessage(userListString)));
+                    });
+                } catch (JsonProcessingException e) {
+                    LOGGER.error("json failed {}",e.getMessage());
+                }
+                
+            }
+        },1000,5000);
+
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
