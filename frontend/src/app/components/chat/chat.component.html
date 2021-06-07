@@ -1,11 +1,16 @@
 <div id="chat-box">
   <div *ngFor="let message of showingMessages">
-    {{message.author}}: {{message.message}}
+    {{ message.author }}: {{ message.message }}
   </div>
 </div>
 <div id="send-message" nz-row [nzGutter]="16">
   <div nz-col nzSpan="19">
-    <input nz-input placeholder="请输入..." [(ngModel)]="sendingMessage.message" />
+    <input
+      nz-input
+      placeholder="请输入..."
+      [(ngModel)]="sendingMessage.message"
+      (keyup.enter)="sendMessage()"
+    />
   </div>
   <div nz-col nzSpan="5">
     <button nz-button nzType="primary" (click)="sendMessage()">发送</button>
