@@ -48,4 +48,38 @@ public class Hanoi {
         }
         throw new IllegalArgumentException("num out of range");
     }
+
+    public int getNumPlates() {
+        return numPlates;
+    }
+
+    public int[] getFirstArray() {
+        int[] result = new int[numPlates];
+        int index = 0;
+        for(Plate p : first){
+            result[index] = p.getSize();
+            index++;
+        }
+        return result;
+    }
+
+    public int[] getSecondArray() {
+        int[] result = new int[numPlates];
+        int index = 0;
+        for(Plate p : second){
+            result[index] = p.getSize();
+            index++;
+        }
+        return result;
+    }
+
+    public int[] getThirdArray() {
+        int[] result = new int[numPlates];
+        int index = 0;
+        for(Plate p : third){
+            result[index] = p.getSize();
+            index++;
+        }
+        return result;
+    }
 }

@@ -7,17 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.*;
 
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class ChatServer implements WebSocketHandler {
-    private static final HashMap<String,WebSocketSession> users = new HashMap<>();
+    private static final Map<String,WebSocketSession> users = new ConcurrentHashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatServer.class);
     private static final ExecutorService pool = Executors.newFixedThreadPool(5);
 
@@ -93,30 +89,6 @@ public class ChatServer implements WebSocketHandler {
         ObjectMapper mapper = new ObjectMapper();
         String message = mapper.writeValueAsString(outBoundData);
         return new TextMessage(message);
-    }
-
-    private static class SendMessageTask implements Callable<Boolean>{
-        private final WebSocketSession user;
-        private final  TextMessage returnMessage;
-        public SendMessageTask(WebSocketSession user,  TextMessage returnMessage) {
-            this.user = user;
-            this.returnMessage = returnMessage;
-        }
-
-        @Override
-        public Boolean call() throws Exception {
-            if (user != null && user.isOpen()) {
-                for (int i = 0; i < 5; i++) {
-                    try {
-                        user.sendMessage(returnMessage);
-                        return true;
-                    }catch(IOException e){
-                        //do nothing
-                    }
-                }
-            }
-            return false;
-        }
     }
 
     private static class InboundData{

@@ -14,7 +14,7 @@ jwt:
   tokenHead: Bearer  #JWT负载中拿到开头
 
 hanoi:
-  numTowers: 3
+  numTowers: 4
 
 logging:
   level:
