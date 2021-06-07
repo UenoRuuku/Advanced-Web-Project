@@ -26,6 +26,7 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ChatComponent } from './components/chat/chat.component';
 import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
+import { MessageComponent } from './message/message.component';
 
 const ngZorroConfig: NzConfig = {
   // 注意组件名称没有 nz 前缀
@@ -43,6 +44,7 @@ registerLocaleData(en);
     RegisterComponent,
     GameComponent,
     ChatComponent,
+    MessageComponent,
   ],
   imports: [
     BrowserModule,

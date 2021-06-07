@@ -25,7 +25,7 @@ export class BaseInterceptor implements HttpInterceptor {
     let token: string = localStorage.getItem("token");
     if (token) {
       /*token数据来源自己设置，我常用localStorage存取相关数据*/
-      newReq.headers = newReq.headers.set("token", token);
+      newReq.headers = newReq.headers.set("Bearer", token);
     }
 
     // send cloned request with header to the next handler.

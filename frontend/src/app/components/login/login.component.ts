@@ -4,9 +4,11 @@ import { NzMessageService } from "ng-zorro-antd/message";
 import { Router } from "@angular/router";
 
 class LoginResponse {
-  token: string;
+  message:{
+    token: string
+  }
   constructor(token: string) {
-    this.token = token;
+    this.message.token = token;
   }
 }
 
@@ -40,7 +42,8 @@ export class LoginComponent {
 
     this.http.post("/user/login", formData).subscribe(
       <LoginResponse>(val) => {
-        localStorage.setItem("token", val.token);
+        console.log(val)
+        localStorage.setItem("token", val.message.token);
         localStorage.setItem("username", this.username);
         this.router.navigate(["/game"]);
         this.loginLoading = false;

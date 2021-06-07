@@ -1,10 +1,13 @@
-<div id="chat-box"></div>
-<nz-divider style="margin: 10px 0"></nz-divider>
-<div nz-row [nzGutter]="16">
-    <div nz-col nzSpan="19">
-        <input nz-input placeholder="Your message" [(ngModel)]="messageValue" />
-    </div>
-    <div nz-col nzSpan="5">
-        <button nz-button nzType="primary">Send</button>
-    </div>
+<div id="chat-box">
+  <div *ngFor="let message of showingMessages">
+    {{message.author}}: {{message.message}}
+  </div>
+</div>
+<div id="send-message" nz-row [nzGutter]="16">
+  <div nz-col nzSpan="19">
+    <input nz-input placeholder="请输入..." [(ngModel)]="sendingMessage.message" />
+  </div>
+  <div nz-col nzSpan="5">
+    <button nz-button nzType="primary" (click)="sendMessage()">发送</button>
+  </div>
 </div>
