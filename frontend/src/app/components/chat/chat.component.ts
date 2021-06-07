@@ -124,4 +124,11 @@ export class ChatComponent implements OnInit {
   isMyPM(message): boolean{
     return message.to
   }
+
+  joinTo(message): string{
+    if(message.to){
+      return message.to.join("、")
+    }
+    return ""
+  }
 }

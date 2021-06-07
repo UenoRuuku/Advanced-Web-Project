@@ -2,14 +2,35 @@
   <div id="messages-wrapper" style="margin: 0; padding: 0">
     <div *ngFor="let message of showingMessages" class="chat-line">
       <div *ngIf="!message.isMyself">
-        <div class="chat-message-author">{{ message.author }}<i *ngIf="isPM(message)" class="pm-lock" nz-icon nzType="lock" nzTheme="outline"></i></div>
+        <div
+          class="chat-message-author"
+          (click)="buttonAt(message.author)"
+        >
+          {{ message.author }}
+          <i
+            *ngIf="isPM(message)"
+            class="pm-lock"
+            nz-icon
+            nzType="user-switch"
+            nzTheme="outline"
+          ></i>{{ joinTo(message) }}
+        </div>
         <div class="chat-message-body">
           {{ message.message }}
           <p class="chat-message-time">{{ message.time }}</p>
         </div>
       </div>
       <div *ngIf="message.isMyself" class="chat-myself-wrapper">
-        <div class="chat-message-author">{{ message.author }}<i *ngIf="isMyPM(message)" class="pm-lock" nz-icon nzType="lock" nzTheme="outline"></i></div>
+        <div class="chat-message-author">
+          {{ message.author }}
+          <i
+            *ngIf="isMyPM(message)"
+            class="pm-lock"
+            nz-icon
+            nzType="user-switch"
+            nzTheme="outline"
+          ></i>{{ joinTo(message) }}
+        </div>
         <div class="chat-message-body chat-message-body-myself">
           {{ message.message }}
           <p class="chat-message-time">{{ message.time }}</p>
@@ -39,16 +60,18 @@
     <nz-mention [nzSuggestions]="userList" (nzOnSelect)="onSelect($event)">
       <nz-input-group [nzPrefix]="prefixTemplateUser">
         <input
-        nz-input
-        nzMentionTrigger
-        placeholder="请输入..."
-        [(ngModel)]="sendingMessage.message"
-        (keyup.enter)="sendMessage()"
-        style="width: 100%"
-      />
+          nz-input
+          nzMentionTrigger
+          placeholder="请输入..."
+          [(ngModel)]="sendingMessage.message"
+          (keyup.enter)="sendMessage()"
+          style="width: 100%"
+        />
       </nz-input-group>
       <ng-template #prefixTemplateUser>
-        <span *ngIf="sendingMessage.to">与 {{sendingMessage.to.join("、")}} 的私信</span>
+        <span *ngIf="sendingMessage.to"
+          >与 {{ sendingMessage.to.join("、") }} 的私信</span
+        >
       </ng-template>
     </nz-mention>
   </div>
