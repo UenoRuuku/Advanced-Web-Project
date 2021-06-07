@@ -32,13 +32,13 @@ export class ChatComponent implements OnInit {
   showingMessages: ShowingMessage[] = [];
   constructor(private chatService: ChatService) {
     chatService.messages.subscribe((msg) => {
-      if(msg.author===localStorage.getItem("username")){
+      if (msg.author === localStorage.getItem("username")) {
         msg.isMyself = true;
       }
-      msg.time = moment(new Date).format("hh:mm A");
+      msg.time = moment(new Date()).format("hh:mm A");
       this.showingMessages.push(msg);
+      this.updateOverflowMessages();
     });
-    this.updateOverflowMessages();
   }
 
   ngOnInit(): void {}
@@ -53,14 +53,16 @@ export class ChatComponent implements OnInit {
     };
   }
 
-  updateOverflowMessages(): void{
-    setInterval(function() {
-      let messagesWrapper = document.getElementById("messages-wrapper");
-      let chatBox = document.getElementById("chat-box");
-      if(chatBox.scrollTop>=messagesWrapper.scrollHeight){
-        chatBox.scrollTop = 0;
+  updateOverflowMessages(): void {
+    let messagesWrapper = document.getElementById("messages-wrapper");
+    let chatBox = document.getElementById("chat-box");
+    let lastScrollTop = chatBox.scrollTop;
+    let interval = setInterval(function(){
+      chatBox.scrollTop++;
+      if(chatBox.scrollTop===lastScrollTop){
+        clearInterval(interval); // 停止，防止无法向上滚动查看历史消息
       }else{
-        chatBox.scrollTop = messagesWrapper.scrollHeight;
+        lastScrollTop = chatBox.scrollTop
       }
     },1);
   }
