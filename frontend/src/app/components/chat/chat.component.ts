@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { WebsocketService } from "../../service/websocket.service";
 import { ChatService } from "../../service/chat.service";
+import * as moment from "moment";
 
 class ShowingMessage {
-  ifMyself: boolean;
+  isMyself: boolean;
   author: string;
   at: [string];
   to: [string];
@@ -32,8 +33,9 @@ export class ChatComponent implements OnInit {
   constructor(private chatService: ChatService) {
     chatService.messages.subscribe((msg) => {
       if(msg.author===localStorage.getItem("username")){
-        msg.ifMyself = true;
+        msg.isMyself = true;
       }
+      msg.time = moment(new Date).format("hh:mm");
       this.showingMessages.push(msg);
     });
   }
