@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { WebsocketService } from "../../service/websocket.service";
 import { ChatService } from "../../service/chat.service";
+import * as moment from "moment";
 
 class ShowingMessage {
-  ifMyself: boolean;
+  isMyself: boolean;
   author: string;
   at: [string];
   to: [string];
@@ -31,10 +32,12 @@ export class ChatComponent implements OnInit {
   showingMessages: ShowingMessage[] = [];
   constructor(private chatService: ChatService) {
     chatService.messages.subscribe((msg) => {
-      if(msg.author===localStorage.getItem("username")){
-        msg.ifMyself = true;
+      if (msg.author === localStorage.getItem("username")) {
+        msg.isMyself = true;
       }
+      msg.time = moment(new Date()).format("hh:mm A");
       this.showingMessages.push(msg);
+      this.updateOverflowMessages();
     });
   }
 
@@ -48,5 +51,19 @@ export class ChatComponent implements OnInit {
       to: null,
       message: "",
     };
+  }
+
+  updateOverflowMessages(): void {
+    let messagesWrapper = document.getElementById("messages-wrapper");
+    let chatBox = document.getElementById("chat-box");
+    let lastScrollTop = chatBox.scrollTop;
+    let interval = setInterval(function(){
+      chatBox.scrollTop++;
+      if(chatBox.scrollTop===lastScrollTop){
+        clearInterval(interval); // 停止，防止无法向上滚动查看历史消息
+      }else{
+        lastScrollTop = chatBox.scrollTop
+      }
+    },1);
   }
 }
