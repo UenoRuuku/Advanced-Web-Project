@@ -22,9 +22,11 @@ public class ChatServer implements WebSocketHandler {
             @Override
             public void run() {
                 List<String> userList = new ArrayList<>(users.keySet());
+                Map<String,List<String>> userMap = new HashMap<>();
+                userMap.put("users",userList);
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    String userListString = mapper.writeValueAsString(userList);
+                    String userListString = mapper.writeValueAsString(userMap);
                     users.values().forEach((user)->{
                         pool.submit(new SendMessageTask(user,new TextMessage(userListString)));
                     });
