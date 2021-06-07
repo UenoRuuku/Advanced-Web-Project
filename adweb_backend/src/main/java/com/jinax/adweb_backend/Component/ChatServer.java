@@ -31,7 +31,7 @@ public class ChatServer implements WebSocketHandler {
                 } catch (JsonProcessingException e) {
                     LOGGER.error("json failed {}",e.getMessage());
                 }
-                
+
             }
         },1000,5000);
 
