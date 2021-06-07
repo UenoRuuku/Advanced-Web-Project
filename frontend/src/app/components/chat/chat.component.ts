@@ -35,7 +35,7 @@ export class ChatComponent implements OnInit {
       if(msg.author===localStorage.getItem("username")){
         msg.isMyself = true;
       }
-      msg.time = moment(new Date).format("hh:mm");
+      msg.time = moment(new Date).format("hh:mm A");
       this.showingMessages.push(msg);
     });
     this.updateOverflowMessages();
