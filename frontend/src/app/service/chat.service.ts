@@ -19,7 +19,7 @@ export class ChatService {
           data.type="userList";
           return data;
         }else if(data.message){
-          if(new Set(data.at).has(localStorage.getItem("username"))){
+          if(new Set(data.at).has(localStorage.getItem("username")) || new Set(data.at).has("everybody")){
             this.message.info(`${data.author}: ${data.message}`);
           }
           data.type="message";

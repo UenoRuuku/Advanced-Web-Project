@@ -57,6 +57,8 @@ export class ChatComponent implements OnInit {
           }else{
             this.showUserList = this.userList
           }
+          this.userList = Array.from(new Set(this.userList).add("everybody"))
+          console.log(this.userList)
           break;
         }
       }
@@ -74,6 +76,7 @@ export class ChatComponent implements OnInit {
       to: null,
       message: "",
     };
+    this.atList = new Set()
   }
 
   updateOverflowMessages(): void {
@@ -91,7 +94,17 @@ export class ChatComponent implements OnInit {
 
   onSelect(suggestion: string): void {
     console.log("onSelect "+suggestion)
-    this.atList.add(suggestion)
+    if(suggestion === "everybody"){
+      this.atList = new Set()
+      this.atList.add("everybody")
+    }else{
+      this.atList.add(suggestion)
+    }
     this.sendingMessage.at = Array.from(this.atList)
+  }
+
+  buttonAt(user): void{
+    this.onSelect(user)
+    this.sendingMessage.message = `@${user} `+this.sendingMessage.message;
   }
 }

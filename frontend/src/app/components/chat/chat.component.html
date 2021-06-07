@@ -26,25 +26,26 @@
     nzType="primary"
     [nzPopoverTitle]="user"
     [nzPopoverContent]="contentTemplate"
-  ></nz-avatar>
-  <ng-template #contentTemplate>
-    <button nzButton>@ 提及</button>
-    <button nzButton style="margin-left: 25px;"><i nz-icon nzType="message" nzTheme="outline"></i> 私信</button>
-  </ng-template>
+    ><ng-template #contentTemplate>
+      <button nzButton (click)="buttonAt(user)">@ 提及</button>
+      <button nzButton style="margin-left: 25px">
+        <i nz-icon nzType="message" nzTheme="outline"></i> 私信
+      </button>
+    </ng-template>
+  </nz-avatar>
 </nz-avatar-group>
 <div id="send-message" nz-row [nzGutter]="16">
   <div nz-col nzSpan="19">
     <nz-mention [nzSuggestions]="userList" (nzOnSelect)="onSelect($event)">
       <input
-      nz-input
-      nzMentionTrigger
-      placeholder="请输入..."
-      [(ngModel)]="sendingMessage.message"
-      (keyup.enter)="sendMessage()"
-      style="width: 100%"
-    />
+        nz-input
+        nzMentionTrigger
+        placeholder="请输入..."
+        [(ngModel)]="sendingMessage.message"
+        (keyup.enter)="sendMessage()"
+        style="width: 100%"
+      />
     </nz-mention>
-    
   </div>
   <div nz-col nzSpan="5">
     <button nz-button nzType="primary" (click)="sendMessage()">发送</button>
