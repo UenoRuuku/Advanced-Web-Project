@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class Hanoi {
     private final int numPlates;
-    private final LinkedList<Plate> first;
-    private final LinkedList<Plate> second;
-    private final LinkedList<Plate> third;
+    private LinkedList<Plate> first;
+    private LinkedList<Plate> second;
+    private LinkedList<Plate> third;
 
     public Hanoi(int numPlates) {
         this.numPlates = numPlates;
@@ -35,9 +35,31 @@ public class Hanoi {
         if(plate == null){
             return false;
         }
-        return getTower(to).offer(plate);
+
+        if(!getTower(to).offer(plate)){
+            return false;
+        }
+        return isFinished();
     }
 
+    public boolean isFinished(){
+        int i = 1;
+        for(Plate p : third){
+            if(i != p.getSize()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void refresh(){
+        this.first = new LinkedList<>();
+        this.second = new LinkedList<>();
+        this.third = new LinkedList<>();
+        for(int i = 0;i < numPlates;i++){
+            first.offer(new Plate(i + 1));
+        }
+    }
 
 
     private LinkedList<Plate> getTower(int num){
@@ -62,6 +84,28 @@ public class Hanoi {
         }
         return result;
     }
+    public String getFirstString(){
+        StringBuilder sb = new StringBuilder();
+        for(Plate p : first){
+            sb.append(p.getSize());
+        }
+        return sb.toString();
+    }
+    public String getSecondString(){
+        StringBuilder sb = new StringBuilder();
+        for(Plate p : second){
+            sb.append(p.getSize());
+        }
+        return sb.toString();
+    }
+    public String getThirdString(){
+        StringBuilder sb = new StringBuilder();
+        for(Plate p : third){
+            sb.append(p.getSize());
+        }
+        return sb.toString();
+    }
+
 
     public int[] getSecondArray() {
         int[] result = new int[numPlates];

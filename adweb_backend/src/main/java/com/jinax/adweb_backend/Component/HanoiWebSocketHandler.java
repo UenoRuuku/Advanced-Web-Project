@@ -1,5 +1,6 @@
 package com.jinax.adweb_backend.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jinax.adweb_backend.Component.Tower.Hanoi;
 import org.slf4j.Logger;
@@ -22,10 +23,12 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
     private WebSocketSession movingSession;
     private int from;
     private int id;
+    private int gameId;
     private static final ExecutorService pool = Executors.newFixedThreadPool(5);
 
     public HanoiWebSocketHandler(Hanoi hanoi) {
         this.hanoi = hanoi;
+
         movingSession = null;
     }
 
@@ -50,7 +53,7 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
             case MovingRequest.PLAYER_MOVING:{
                 MovingResponse response = new MovingResponse(username,request.posX,request.posY,request.type,request.pillar,request.plane,ID_NOT_NEED);
                 String returnMessage = mapper.writeValueAsString(response);
-                pool.submit(new SendMessageTask(session,new TextMessage(returnMessage)));
+                sendMessageToUsers(returnMessage);
                 break;
             }
             case MovingRequest.HANOI_START_MOVING:{
@@ -61,7 +64,7 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
                 from = request.pillar;
                 MovingResponse response = new MovingResponse(username,request.posX,request.posY,request.type,request.pillar,request.plane,id++);
                 String returnMessage = mapper.writeValueAsString(response);
-                pool.submit(new SendMessageTask(session,new TextMessage(returnMessage)));
+                sendMessageToUsers(returnMessage);
                 break;
             }
             case MovingRequest.HANOI_MOVING:{
@@ -70,7 +73,7 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
                 }
                 MovingResponse response = new MovingResponse(username,request.posX,request.posY,request.type,request.pillar,request.plane,id++);
                 String returnMessage = mapper.writeValueAsString(response);
-                pool.submit(new SendMessageTask(session,new TextMessage(returnMessage)));
+                sendMessageToUsers(returnMessage);
                 break;
             }
             case MovingRequest.HANOI_END_MOVING:{
@@ -81,7 +84,7 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
                 MovingResponse response = new MovingResponse(username,request.posX,request.posY,request.type,request.pillar,request.plane,id++);
                 hanoi.update(from, to);
                 String returnMessage = mapper.writeValueAsString(response);
-                pool.submit(new SendMessageTask(session,new TextMessage(returnMessage)));
+                sendMessageToUsers(returnMessage);
                 movingSession = null;
                 break;
             }
@@ -110,6 +113,13 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
     @Override
     public boolean supportsPartialMessages() {
         return false;
+    }
+
+    private void sendMessageToUsers(String message) throws JsonProcessingException {
+        //这里可能因为并发问题导致访问到已经退出的 user，但是不关键
+        for (WebSocketSession user : users.values()) {
+            pool.submit(new SendMessageTask(user,new TextMessage(message)));// omit the future returned
+        }
     }
 
     private static class MovingRequest{
