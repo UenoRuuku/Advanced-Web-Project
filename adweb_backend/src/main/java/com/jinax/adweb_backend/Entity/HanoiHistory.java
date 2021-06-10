@@ -25,6 +25,14 @@ public class HanoiHistory {
     public HanoiHistory() {
     }
 
+    public HanoiHistory(String firstTower, String secondTower, String thirdTower, Integer operationId, Integer gameId) {
+        this.firstTower = firstTower;
+        this.secondTower = secondTower;
+        this.thirdTower = thirdTower;
+        this.operationId = operationId;
+        this.gameId = gameId;
+    }
+
     public Integer getId() {
         return id;
     }

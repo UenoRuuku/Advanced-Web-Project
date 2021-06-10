@@ -1,5 +1,6 @@
 package com.jinax.adweb_backend.Controller;
 
+import com.jinax.adweb_backend.Component.exception.UserNotExistException;
 import com.jinax.adweb_backend.Entity.User;
 import com.jinax.adweb_backend.Service.UserService;
 import io.swagger.annotations.Api;
@@ -8,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,31 +31,40 @@ public class UserController {
     @PostMapping("/login")
     @ApiOperation("登录")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> login(String username, String password){
+    public ResponseEntity<Map<String,String>> login(String username, String password){
         LOGGER.info("UserController.login username is {},password is {}",username,password);
         Map<String, String> loginMap = userService.login(username, password);
-        Map<String, Object> resultMap = new HashMap<>();
         if(loginMap == null){
-            resultMap.put("message","用户名或密码错误");
-            return new ResponseEntity<>(resultMap, HttpStatus.FORBIDDEN);
+            throw new UserNotExistException("用户名或密码错误");
         }
-        resultMap.put("message",loginMap);
-        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+        return new ResponseEntity<>(loginMap, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     @ApiOperation("注册")
     @ResponseBody
-    public ResponseEntity<Map<String,Object>> register(User user){
+    public ResponseEntity<Map<String,String>> register(User user){
         LOGGER.info("UserController.register username is {},password is {},avatar is {}",user.getUsername(),user.getPassword(),user.getAvatar());
-        Map<String, Object> resultMap = new HashMap<>();
         try{
             Map<String, String> map = userService.insertNewUser(user);
-            resultMap.put("message",map);
-            return new ResponseEntity<>(resultMap, HttpStatus.OK);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (RuntimeException e){
+            Map<String, String> resultMap = new HashMap<>();
             resultMap.put("message","注册失败");
             return new ResponseEntity<>(resultMap, HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/avatar/{username}")
+    @ApiOperation("获取 avatar")
+    @ResponseBody
+    public ResponseEntity<User> getAvatar(@PathVariable("username") String username){
+        LOGGER.info("UserController.getAvatar username is {}",username);
+        User byUserName = userService.findByUserName(username);
+        if(byUserName == null){
+            throw new UserNotExistException("用户不存在");
+        }else{
+            return new ResponseEntity<>(byUserName, HttpStatus.OK);
         }
     }
 }

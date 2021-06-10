@@ -3,6 +3,9 @@ package com.jinax.adweb_backend.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jinax.adweb_backend.Component.Tower.Hanoi;
+import com.jinax.adweb_backend.Entity.Operation;
+import com.jinax.adweb_backend.Service.AggregateService;
+import com.jinax.adweb_backend.Service.GameHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.*;
@@ -19,6 +22,9 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
     private static final int ID_NOT_NEED = -1;
     private static final Map<String,WebSocketSession> users = new ConcurrentHashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(HanoiWebSocketHandler.class);
+    private final GameHistoryService gameHistoryService;
+    private final AggregateService aggregateService;
+
     private final Hanoi hanoi;
     private WebSocketSession movingSession;
     private int from;
@@ -26,9 +32,11 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
     private int gameId;
     private static final ExecutorService pool = Executors.newFixedThreadPool(5);
 
-    public HanoiWebSocketHandler(Hanoi hanoi) {
+    public HanoiWebSocketHandler(GameHistoryService gameHistoryService,  AggregateService aggregateService, Hanoi hanoi) {
+        this.gameHistoryService = gameHistoryService;
         this.hanoi = hanoi;
-
+        this.aggregateService = aggregateService;
+        this.gameId = aggregateService.startNewGame(hanoi);//TODO should handle exception
         movingSession = null;
     }
 
@@ -81,8 +89,20 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
                     return;
                 }
                 int to = request.getPillar();
-                MovingResponse response = new MovingResponse(username,request.posX,request.posY,request.type,request.pillar,request.plane,id++);
-                hanoi.update(from, to);
+                boolean result = hanoi.update(from, to);//update hanoi
+                //deal with db
+                Operation operation = new Operation((Integer) session.getAttributes().get("id"),(short)from,(short)to,(short)hanoi.getTower(from).getLast().getSize());
+                if(result){
+                    //one game finished
+                    aggregateService.saveOperationTogetherWithHanoiHistory(operation,hanoi,gameId);
+                    hanoi.refresh();
+                    this.gameId = aggregateService.startNewGame(hanoi);
+                }else{
+                    aggregateService.saveOperationTogetherWithHanoiHistory(operation,hanoi,gameId);
+                }
+
+                MovingResponse response = new MovingResponse(
+                        username,request.posX,request.posY,request.type,request.pillar,request.plane,id++);
                 String returnMessage = mapper.writeValueAsString(response);
                 sendMessageToUsers(returnMessage);
                 movingSession = null;

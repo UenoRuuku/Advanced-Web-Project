@@ -3,10 +3,13 @@ package com.jinax.adweb_backend.Config;
 import com.jinax.adweb_backend.Component.HanoiWebSocketHandler;
 import com.jinax.adweb_backend.Component.ChatServer;
 import com.jinax.adweb_backend.Component.Tower.Hanoi;
+import com.jinax.adweb_backend.Service.AggregateService;
+import com.jinax.adweb_backend.Service.GameHistoryService;
+import com.jinax.adweb_backend.Service.HanoiHistoryService;
+import com.jinax.adweb_backend.Service.OperationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -21,6 +24,14 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Value("${hanoi.numTowers}")
     private int numTowers;
+
+    private final AggregateService aggregateService;
+    private final GameHistoryService gameHistoryService;
+
+    public WebSocketConfig(AggregateService aggregateService, GameHistoryService gameHistoryService) {
+        this.aggregateService = aggregateService;
+        this.gameHistoryService = gameHistoryService;
+    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -42,6 +53,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Bean
     public WebSocketHandler hanoiHandler() {
-        return new HanoiWebSocketHandler(hanoi());
+        return new HanoiWebSocketHandler(gameHistoryService, aggregateService, hanoi());
     }
 }

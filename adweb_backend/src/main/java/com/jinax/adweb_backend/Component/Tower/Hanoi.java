@@ -62,7 +62,7 @@ public class Hanoi {
     }
 
 
-    private LinkedList<Plate> getTower(int num){
+    public LinkedList<Plate> getTower(int num){
         switch (num){
             case 1: return first;
             case 2: return second;
