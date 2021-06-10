@@ -21,15 +21,21 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { httpInterceptorProviders } from './http-interceptors/index';
-import { GameComponent } from './game/game.component';
+import { GameComponent } from './components/game/game.component';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ChatComponent } from './components/chat/chat.component';
 import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
-import { MessageComponent } from './message/message.component';
+import { MessageComponent } from './components/message/message.component';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzMentionModule } from 'ng-zorro-antd/mention';
+import { ProfileComponent } from './components/profile/profile.component';
+import { GameHistoryComponent } from './components/game-history/game-history.component';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzPipesModule } from 'ng-zorro-antd/pipes';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 
 const ngZorroConfig: NzConfig = {
   // 注意组件名称没有 nz 前缀
@@ -48,6 +54,8 @@ registerLocaleData(en);
     GameComponent,
     ChatComponent,
     MessageComponent,
+    ProfileComponent,
+    GameHistoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,14 +72,19 @@ registerLocaleData(en);
     NzIconModule,
     NzButtonModule,
     NzMessageModule,
+    NzTableModule,
+    NzSpinModule,
     NzGridModule,
+    NzPipesModule,
+    NzStatisticModule,
     NzMentionModule,
     NzDividerModule,
     RouterModule.forRoot([
       { path: "", component: LayoutComponent,
         children: [{
-          path: 'game', component: GameComponent,
-          //path: '/profile', component: ProfileComponent,
+          path: '', component: GameComponent,
+        },{
+          path: 'profile', component: ProfileComponent,
         }],
     },
       { path: "login", component: LoginComponent },

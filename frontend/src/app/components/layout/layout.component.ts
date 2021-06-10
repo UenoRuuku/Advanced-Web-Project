@@ -25,4 +25,8 @@ export class LayoutComponent {
     this.router.navigate(['/login']);
     this.message.success('退出成功')
   }
+
+  jumpProfile(username): void{
+    this.router.navigate(["/profile"], {queryParams: {username: username}});
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { WebsocketService } from "../../service/websocket.service";
 import { ChatService } from "../../service/chat.service";
+import { Router } from '@angular/router';
 import * as moment from "moment";
 
 class ShowingMessage {
@@ -36,7 +37,7 @@ export class ChatComponent implements OnInit {
 
   atList: Set<string> = new Set();
 
-  constructor(private chatService: ChatService) {
+  constructor(private chatService: ChatService, private router : Router) {
     chatService.messages.subscribe((msg) => {
       switch(msg.type){
         case 'message': {
@@ -130,5 +131,9 @@ export class ChatComponent implements OnInit {
       return message.to.join("、")
     }
     return ""
+  }
+
+  jumpProfile(username): void{
+    this.router.navigate(["/profile"], {queryParams: {username: username}});
   }
 }

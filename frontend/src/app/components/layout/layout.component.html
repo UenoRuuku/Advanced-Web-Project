@@ -1,10 +1,10 @@
 <nz-layout>
   <nz-header style="display: flex; justify-content: space-between;">
-    <div class="logo"></div>
+    <div routerLink='/' class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="horizontal">
       <li *ngIf="!logged" routerLink='/login' nz-menu-item>登录</li>
       <li *ngIf="!logged" routerLink='/register' nz-menu-item>注册</li>
-      <li *ngIf="logged" routerLink='/user' nz-menu-item><i nz-icon nzType="user" nzTheme="outline"></i>{{username}}</li>
+      <li *ngIf="logged" (click)="jumpProfile(username)" nz-menu-item><i nz-icon nzType="user" nzTheme="outline"></i>{{username}}</li>
       <li *ngIf="logged" (click)="exit()" nz-menu-item>退出登录</li>
     </ul>
   </nz-header>

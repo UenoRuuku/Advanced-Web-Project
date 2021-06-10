@@ -6,7 +6,7 @@
           class="chat-message-author"
           (click)="buttonAt(message.author)"
         >
-          {{ message.author }}
+          <span style="cursor: pointer" (click)="jumpProfile(message.author)">{{ message.author }}</span>
           <i
             *ngIf="isPM(message)"
             class="pm-lock"
@@ -44,9 +44,11 @@
     *ngFor="let user of showUserList"
     [nzText]="user"
     nz-popover
+    (click)="jumpProfile(user)"
     nzType="primary"
     [nzPopoverTitle]="user"
     [nzPopoverContent]="contentTemplate"
+    class="avatar"
     ><ng-template #contentTemplate>
       <button nzButton (click)="buttonAt(user)">@ 提及</button>
       <button nzButton style="margin-left: 25px" (click)="buttonTo(user)">

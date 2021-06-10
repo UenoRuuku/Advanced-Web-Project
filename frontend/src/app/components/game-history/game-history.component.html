@@ -1,0 +1,19 @@
+<nz-spin *ngIf="gameHistoryDataLoading" nzSimple></nz-spin>
+<nz-table *ngIf="!gameHistoryDataLoading" #basicTable [nzData]="gameHistoryData">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th>总步数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{ data.id }}</td>
+      <td>{{ data.startTime }}</td>
+      <td>{{ data.endTime | nzSafeNull: '未结束' }}</td>
+      <td>{{ data.stepNum }}</td>
+    </tr>
+  </tbody>
+</nz-table>

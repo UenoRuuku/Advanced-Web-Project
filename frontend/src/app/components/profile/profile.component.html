@@ -1,0 +1,36 @@
+<div nz-row [nzGutter]="16">
+  <div nz-col nzSpan="6">
+    <nz-card id="user-card" [nzBordered]="false" [nzTitle]="username">
+    </nz-card>
+    <div nz-row [nzGutter]="16">
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(gameNum | number)!"
+            [nzTitle]="'总游戏局数'"
+            [nzPrefix]="prefixHistory"
+          ></nz-statistic>
+          <ng-template #prefixHistory><i nz-icon nzType="history"></i></ng-template>
+        </nz-card>
+      </div>
+      <div nz-col class="gutter-row" [nzSpan]="12">
+        <nz-card class="statistic-card">
+          <nz-statistic
+            [nzValue]="(stepNum | number)!"
+            [nzTitle]="'总步数'"
+            [nzPrefix]="prefixBulb"
+          ></nz-statistic>
+          <ng-template #prefixBulb><i nz-icon nzType="bulb"></i></ng-template>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzSpan="18">
+    <nz-card [nzBordered]="false" nzTitle="历史游戏记录" id="history-game-card">
+      <app-game-history
+        #game
+        (outer)="updateGameNum($event)"
+      ></app-game-history>
+    </nz-card>
+  </div>
+</div>
