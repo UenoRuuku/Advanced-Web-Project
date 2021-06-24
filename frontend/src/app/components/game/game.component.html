@@ -1,20 +1,15 @@
 <div nz-row [nzGutter]="16">
   <div nz-col nzSpan="17">
     <nz-card id="hanoi-card" [nzBordered]="false" nzTitle="汉诺塔">
-
+      <app-game-scene></app-game-scene>
     </nz-card>
   </div>
   <div nz-col nzSpan="7">
-    <nz-card
-      [nzBordered]="false"
-      [nzExtra]="extraTemplate"
-      nzTitle="聊天室"
-      id="chat-card"
-    >
+    <nz-card [nzBordered]="false" [nzExtra]="extraTemplate" nzTitle="聊天室" id="chat-card">
       <app-chat></app-chat>
     </nz-card>
     <ng-template #extraTemplate>
-      
+
     </ng-template>
   </div>
 </div>

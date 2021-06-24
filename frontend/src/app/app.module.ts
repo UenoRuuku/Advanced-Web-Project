@@ -37,6 +37,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzPipesModule } from 'ng-zorro-antd/pipes';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { HanoiHistoryComponent } from './components/hanoi-history/hanoi-history.component';
+import { GameSceneComponent } from './components/game-scene/game-scene.component';
 
 const ngZorroConfig: NzConfig = {
   // 注意组件名称没有 nz 前缀
@@ -58,6 +59,7 @@ registerLocaleData(en);
     ProfileComponent,
     GameHistoryComponent,
     HanoiHistoryComponent,
+    GameSceneComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,15 +84,17 @@ registerLocaleData(en);
     NzMentionModule,
     NzDividerModule,
     RouterModule.forRoot([
-      { path: "", component: LayoutComponent,
+      {
+        path: "", component: LayoutComponent,
         children: [{
           path: '', component: GameComponent,
-        },{
+        }, {
           path: 'profile', component: ProfileComponent,
         }],
-    },
+      },
       { path: "login", component: LoginComponent },
-      { path: "register", component: RegisterComponent }
+      { path: "register", component: RegisterComponent },
+      { path: "game", component: GameSceneComponent }
     ])
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }, httpInterceptorProviders, { provide: NZ_CONFIG, useValue: ngZorroConfig }],
