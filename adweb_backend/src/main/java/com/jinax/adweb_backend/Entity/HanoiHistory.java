@@ -1,5 +1,7 @@
 package com.jinax.adweb_backend.Entity;
 
+import org.hibernate.annotations.SQLInsert;
+
 import javax.persistence.*;
 
 /**
@@ -23,7 +25,7 @@ public class HanoiHistory {
     private Integer gameId;
 
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    @JoinColumn(name="operation_id",referencedColumnName = "id")
+    @JoinColumn(name="operationId",referencedColumnName = "id",insertable = false,updatable = false)
     private Operation operation;
 
     public HanoiHistory() {
