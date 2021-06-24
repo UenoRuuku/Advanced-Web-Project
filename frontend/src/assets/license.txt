@@ -1,0 +1,11 @@
+Model Information:
+* title:	セリア＝クレール
+* source:	https://sketchfab.com/3d-models/60facf5107264e6f9d9f2071f9efca7c
+* author:	aflo18 (https://sketchfab.com/aflo18)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "セリア＝クレール" (https://sketchfab.com/3d-models/60facf5107264e6f9d9f2071f9efca7c) by aflo18 (https://sketchfab.com/aflo18) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
