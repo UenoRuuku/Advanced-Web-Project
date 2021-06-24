@@ -43,7 +43,7 @@ public class AggregateService {
     public Integer saveOperationTogetherWithHanoiHistory(Operation operation,Hanoi hanoi,int gameId){
         int operationId = operationService.insertOperation(operation);
         HanoiHistory history = new HanoiHistory(
-                hanoi.getFirstString(),hanoi.getSecondString(),hanoi.getThirdString(),operationId,gameId);
+                hanoi.getFirstString(),hanoi.getSecondString(),hanoi.getThirdString(),operationId,gameId, operation);
         gameHistoryService.updateStepNum(gameId);
         return hanoiHistoryService.insertHanoiHistory(history);
     }

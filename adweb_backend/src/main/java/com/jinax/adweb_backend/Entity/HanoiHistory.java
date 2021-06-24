@@ -22,15 +22,29 @@ public class HanoiHistory {
     @Column(nullable = false)
     private Integer gameId;
 
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @JoinColumn(name="operation_id",referencedColumnName = "id")
+    private Operation operation;
+
     public HanoiHistory() {
     }
 
-    public HanoiHistory(String firstTower, String secondTower, String thirdTower, Integer operationId, Integer gameId) {
+    public HanoiHistory(Integer id, String firstTower, String secondTower, String thirdTower, Integer operationId, Integer gameId) {
+        this.id = id;
         this.firstTower = firstTower;
         this.secondTower = secondTower;
         this.thirdTower = thirdTower;
         this.operationId = operationId;
         this.gameId = gameId;
+    }
+
+    public HanoiHistory(String firstTower, String secondTower, String thirdTower, Integer operationId, Integer gameId, Operation operation) {
+        this.firstTower = firstTower;
+        this.secondTower = secondTower;
+        this.thirdTower = thirdTower;
+        this.operationId = operationId;
+        this.gameId = gameId;
+        this.operation = operation;
     }
 
     public Integer getId() {
@@ -79,5 +93,13 @@ public class HanoiHistory {
 
     public void setGameId(Integer gameId) {
         this.gameId = gameId;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
     }
 }

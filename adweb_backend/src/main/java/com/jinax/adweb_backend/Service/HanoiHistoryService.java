@@ -4,8 +4,9 @@ import com.jinax.adweb_backend.Entity.HanoiHistory;
 import com.jinax.adweb_backend.Repository.HanoiHistoryRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.*;
 
 /**
  * @author jinaxCai
@@ -13,7 +14,6 @@ import java.util.Optional;
 @Service
 public class HanoiHistoryService {
     private final HanoiHistoryRepository hanoiHistoryRepository;
-
     public HanoiHistoryService(HanoiHistoryRepository hanoiHistoryRepository) {
         this.hanoiHistoryRepository = hanoiHistoryRepository;
     }
