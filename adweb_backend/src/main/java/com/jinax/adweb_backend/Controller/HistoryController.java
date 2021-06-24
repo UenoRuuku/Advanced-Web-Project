@@ -3,6 +3,7 @@ package com.jinax.adweb_backend.Controller;
 import com.jinax.adweb_backend.Component.exception.HistoryNotExistException;
 import com.jinax.adweb_backend.Entity.GameHistory;
 import com.jinax.adweb_backend.Entity.HanoiHistory;
+import com.jinax.adweb_backend.Entity.OuEntity.HanoiHistoryWithUsername;
 import com.jinax.adweb_backend.Service.GameHistoryService;
 import com.jinax.adweb_backend.Service.HanoiHistoryService;
 import com.jinax.adweb_backend.Service.OperationService;
@@ -41,7 +42,7 @@ public class HistoryController {
     @GetMapping("/hanoi/all/{gameId}")
     @ApiOperation("获取一盘游戏中的全部棋盘历史状态记录")
     @ResponseBody
-    public List<HanoiHistory> getHanoiHistoryByGameId(@PathVariable("gameId") Integer gameId){
+    public List<HanoiHistoryWithUsername> getHanoiHistoryByGameId(@PathVariable("gameId") Integer gameId){
         return hanoiHistoryService.getAllByGameId(gameId);
     }
 
