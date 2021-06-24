@@ -17,13 +17,12 @@ public class HanoiHistory {
     private String secondTower;
     @Column(nullable = false)
     private String thirdTower;
-    @Column(nullable = false)
-    private Integer operationId;
+
     @Column(nullable = false)
     private Integer gameId;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    @JoinColumn(name="operation_id",referencedColumnName = "id")
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE},)
+    @JoinColumn(name="operationId",referencedColumnName = "id")
     private Operation operation;
 
     public HanoiHistory() {
@@ -34,7 +33,6 @@ public class HanoiHistory {
         this.firstTower = firstTower;
         this.secondTower = secondTower;
         this.thirdTower = thirdTower;
-        this.operationId = operationId;
         this.gameId = gameId;
     }
 

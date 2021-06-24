@@ -20,8 +20,7 @@ export class ProfileComponent implements OnInit {
   username: string;
   gameNum: number;
   stepNum: number;
-  hanoiHistoryTitle: string = "历史游戏详情";
-  hanoiAllHistory: HanoiAllHistoryResponse;
+  hanoiHistoryTitle: string = `历史游戏详情(${localStorage.getItem("gameDetailId")})`;
 
   showHanoiHistory: boolean = false;
 
@@ -40,11 +39,6 @@ export class ProfileComponent implements OnInit {
   }
 
   wantHanoiCallback(event): void {
-    this.http.get(`/history/hanoi/all/${event}`).subscribe(
-      <HanoiAllHistoryResponse>(val)=>{
-        this.hanoiAllHistory = val;
-        this.showHanoiHistory = !this.showHanoiHistory;
-      }
-    );
+    this.showHanoiHistory = !this.showHanoiHistory;
   }
 }

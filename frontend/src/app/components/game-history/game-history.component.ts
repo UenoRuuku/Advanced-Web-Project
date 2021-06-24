@@ -59,6 +59,7 @@ export class GameHistoryComponent implements OnInit {
   }
 
   wantHanoiCallback(id): void{
+    localStorage.setItem("gameDetailId", id);
     this.wantHanoi.emit(id);
   }
 }

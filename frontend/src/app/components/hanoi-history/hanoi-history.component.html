@@ -1,1 +1,30 @@
-<p>hanoi-history works!</p>
+<nz-spin *ngIf="hanoiHistoryDataLoading" nzSimple></nz-spin>
+<nz-table
+  *ngIf="!hanoiHistoryDataLoading"
+  #basicTable
+  [nzData]="hanoiHistoryData"
+>
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>第一座塔</th>
+      <th>第二座塔</th>
+      <th>第三座塔</th>
+      <th>上一位操作的玩家</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of hanoiHistoryData">
+      <td>{{ data.id }}</td>
+      <td [innerHtml]="data.firstTowerHtml"></td>
+      <td [innerHtml]="data.secondTowerHtml"></td>
+      <td [innerHtml]="data.thirdTowerHtml"></td>
+      <td>{{ data.lastOperationName }}</td>
+      <td>
+        <a nz-button nzType="link" (click)="wantHanoiCallback(data.id)"
+          >查看详情</a
+        >
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
