@@ -36,6 +36,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzPipesModule } from 'ng-zorro-antd/pipes';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { HanoiHistoryComponent } from './components/hanoi-history/hanoi-history.component';
 
 const ngZorroConfig: NzConfig = {
   // 注意组件名称没有 nz 前缀
@@ -56,6 +57,7 @@ registerLocaleData(en);
     MessageComponent,
     ProfileComponent,
     GameHistoryComponent,
+    HanoiHistoryComponent,
   ],
   imports: [
     BrowserModule,

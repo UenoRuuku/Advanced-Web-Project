@@ -26,10 +26,17 @@
     </div>
   </div>
   <div nz-col nzSpan="18">
+    <nz-card *ngIf="showHanoiHistory" [nzBordered]="false" [nzTitle]="hanoiHistoryTitle" [nzExtra]="closeButtonTemplate" id="hanoi-history-card" style="margin-bottom: 15px;">
+      <app-hanoi-history [hanoiAllHistory]="hanoiAllHistory"></app-hanoi-history>
+    </nz-card>
+    <ng-template #closeButtonTemplate>
+      <i nz-icon nzType="close" nzTheme="outline" style="cursor: pointer;" (click)="showHanoiHistory = !showHanoiHistory"></i>
+    </ng-template>
     <nz-card [nzBordered]="false" nzTitle="历史游戏记录" id="history-game-card">
       <app-game-history
         #game
         (outer)="updateGameNum($event)"
+        (wantHanoi)="wantHanoiCallback($event)"
       ></app-game-history>
     </nz-card>
   </div>

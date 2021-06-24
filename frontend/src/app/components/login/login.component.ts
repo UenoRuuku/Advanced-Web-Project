@@ -42,10 +42,9 @@ export class LoginComponent {
 
     this.http.post("/user/login", formData).subscribe(
       <LoginResponse>(val) => {
-        console.log(val)
-        localStorage.setItem("token", val.message.token);
+        localStorage.setItem("token", val.token);
         localStorage.setItem("username", this.username);
-        this.router.navigate(["/game"]);
+        this.router.navigate([""]);
         this.loginLoading = false;
       },
       (error) => {

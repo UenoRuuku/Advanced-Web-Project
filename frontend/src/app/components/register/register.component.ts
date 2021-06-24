@@ -44,7 +44,7 @@ export class RegisterComponent {
       <RegisterResponse>(val) => {
         localStorage.setItem("token", val.token);
         localStorage.setItem("username", this.username);
-        this.router.navigate(["/game"]);
+        this.router.navigate([""]);
         this.registerLoading = false;
       },
       (error) => {

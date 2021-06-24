@@ -17,6 +17,8 @@ class GameHistory {
 })
 export class GameHistoryComponent implements OnInit {
   @Output() private outer = new EventEmitter;
+  @Output('wantHanoi') wantHanoi = new EventEmitter<any>();
+  
   gameHistoryData: [];
   username: string;
   gameHistoryDataLoading: boolean;
@@ -54,5 +56,9 @@ export class GameHistoryComponent implements OnInit {
         this.gameHistoryDataLoading = false;
       }
     );
+  }
+
+  wantHanoiCallback(id): void{
+    this.wantHanoi.emit(id);
   }
 }

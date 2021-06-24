@@ -1,24 +1,50 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
+
+type HanoiAllHistoryResponse = [{
+  firstTower: string;
+  gameId: number;
+  id: number;
+  operationId: number;
+  secondTower: string;
+  thirdTower: string;
+}];
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  selector: "app-profile",
+  templateUrl: "./profile.component.html",
+  styleUrls: ["./profile.component.css"],
 })
 export class ProfileComponent implements OnInit {
   username: string;
   gameNum: number;
   stepNum: number;
-  constructor(private activatedRouter: ActivatedRoute) {
+  hanoiHistoryTitle: string = "历史游戏详情";
+  hanoiAllHistory: HanoiAllHistoryResponse;
+
+  showHanoiHistory: boolean = false;
+
+  constructor(
+    private activatedRouter: ActivatedRoute,
+    private http: HttpClient
+  ) {
     this.username = this.activatedRouter.queryParams["_value"]["username"];
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  updateGameNum(e){
+  updateGameNum(e) {
     this.gameNum = e.gameNum;
     this.stepNum = e.stepNum;
+  }
+
+  wantHanoiCallback(event): void {
+    this.http.get(`/history/hanoi/all/${event}`).subscribe(
+      <HanoiAllHistoryResponse>(val)=>{
+        this.hanoiAllHistory = val;
+        this.showHanoiHistory = !this.showHanoiHistory;
+      }
+    );
   }
 }
