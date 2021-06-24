@@ -1,5 +1,7 @@
 package com.jinax.adweb_backend.Entity;
 
+import org.hibernate.annotations.SQLInsert;
+
 import javax.persistence.*;
 
 /**
@@ -17,12 +19,13 @@ public class HanoiHistory {
     private String secondTower;
     @Column(nullable = false)
     private String thirdTower;
-
+    @Column(nullable = false)
+    private Integer operationId;
     @Column(nullable = false)
     private Integer gameId;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE},)
-    @JoinColumn(name="operationId",referencedColumnName = "id")
+    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @JoinColumn(name="operationId",referencedColumnName = "id",insertable = false,updatable = false)
     private Operation operation;
 
     public HanoiHistory() {
@@ -33,6 +36,7 @@ public class HanoiHistory {
         this.firstTower = firstTower;
         this.secondTower = secondTower;
         this.thirdTower = thirdTower;
+        this.operationId = operationId;
         this.gameId = gameId;
     }
 
