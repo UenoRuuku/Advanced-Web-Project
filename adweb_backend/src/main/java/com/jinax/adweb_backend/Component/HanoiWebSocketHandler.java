@@ -277,6 +277,14 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
         public void setPlane(int plane) {
             this.plane = plane;
         }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
     }
 
     private static class FullTowerResponse {
