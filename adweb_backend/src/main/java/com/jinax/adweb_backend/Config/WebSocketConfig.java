@@ -16,7 +16,9 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSocket
@@ -38,7 +40,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(chatHandler(), "/chat/*").
                 setAllowedOrigins("*").
                 addInterceptors(new HttpSessionHandshakeInterceptor(Collections.singleton("username")));
-        registry.addHandler(hanoiHandler(),"/hanoi/*").setAllowedOrigins("*").addInterceptors(new HttpSessionHandshakeInterceptor(Collections.singleton("username")));;
+        List<String> l = new ArrayList<>();
+        l.add("username");
+        l.add("userId");
+        registry.addHandler(hanoiHandler(),"/hanoi/*").setAllowedOrigins("*").addInterceptors(new HttpSessionHandshakeInterceptor(l));;
     }
 
     @Bean
