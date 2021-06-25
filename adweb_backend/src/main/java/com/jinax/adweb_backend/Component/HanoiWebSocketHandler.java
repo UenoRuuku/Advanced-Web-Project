@@ -89,9 +89,10 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
                     return;
                 }
                 int to = request.getPillar();
-                boolean result = hanoi.update(from, to);//update hanoi
                 //deal with db
                 Operation operation = new Operation(((Number) session.getAttributes().get("userId")).intValue(),(short)from,(short)to,(short)hanoi.getTower(from).getLast().getSize());
+                boolean result = hanoi.update(from, to);//update hanoi
+
                 if(result){
                     //one game finished
                     aggregateService.saveOperationTogetherWithHanoiHistory(operation,hanoi,gameId);
