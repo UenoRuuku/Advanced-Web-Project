@@ -5,6 +5,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import "rxjs/add/operator/map";
 
 const CHAT_URL_BASE = 'ws://localhost:8085/chat';
+const HANOI_URL_BASE = 'ws://localhost:8085/hanoi'
 
 @Injectable()
 export class ChatService {
@@ -28,5 +29,21 @@ export class ChatService {
       })
     );
   }
+
+}
+
+@Injectable()
+export class HanoiService {
+    public messages: Subject<any>;
+
+    constructor(wsService: WebsocketService, private message: NzMessageService) {
+        this.messages = <Subject<any>>(
+            wsService.connect(HANOI_URL_BASE+`/${localStorage.getItem("token")}`).map((response: MessageEvent): any => {
+                let data = JSON.parse(response.data);
+                // console.log(data);
+                return data;
+            })
+        );
+    }
 
 }
