@@ -1,5 +1,9 @@
 <nz-spin *ngIf="gameHistoryDataLoading" nzSimple></nz-spin>
-<nz-table *ngIf="!gameHistoryDataLoading" #basicTable [nzData]="gameHistoryData">
+<nz-table
+  *ngIf="!gameHistoryDataLoading"
+  #basicTable
+  [nzData]="gameHistoryData"
+>
   <thead>
     <tr>
       <th>序号</th>
@@ -13,9 +17,13 @@
     <tr *ngFor="let data of basicTable.data">
       <td>{{ data.id }}</td>
       <td>{{ data.startTime }}</td>
-      <td>{{ data.endTime | nzSafeNull: '未结束' }}</td>
+      <td>{{ data.endTime | nzSafeNull: "未结束" }}</td>
       <td>{{ data.stepNum }}</td>
-      <td><a nz-button nzType="link" (click)="wantHanoiCallback(data.id)">查看详情</a></td>
+      <td>
+        <a nz-button nzType="link" (click)="wantHanoiCallback(data.id)"
+          >查看详情</a
+        >
+      </td>
     </tr>
   </tbody>
 </nz-table>
