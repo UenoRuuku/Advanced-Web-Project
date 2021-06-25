@@ -26,7 +26,7 @@ public class OperationService {
 
 
     public int insertOperation(Operation operation){
-        Operation save = operationRepository.save(operation);
+        Operation save = operationRepository.insertOperation(operation);
         return save.getId();
     }
 
