@@ -38,7 +38,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(chatHandler(), "/chat/*").
                 setAllowedOrigins("*").
                 addInterceptors(new HttpSessionHandshakeInterceptor(Collections.singleton("username")));
-        registry.addHandler(hanoiHandler(),"/hanoi/*").setAllowedOrigins("*");
+        registry.addHandler(hanoiHandler(),"/hanoi/*").setAllowedOrigins("*").addInterceptors(new HttpSessionHandshakeInterceptor(Collections.singleton("username")));;
     }
 
     @Bean
