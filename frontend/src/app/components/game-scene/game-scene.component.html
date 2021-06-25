@@ -1,1 +1,17 @@
+<div id="chat-div">
+  <nz-card
+    *ngIf="showChatCard"
+    [nzBordered]="false"
+    [nzExtra]="extraTemplate"
+    nzTitle="聊天室"
+    id="chat-card"
+    class="shadow"
+  >
+    <app-chat></app-chat>
+  </nz-card>
+  <ng-template #extraTemplate>
+    <i nz-icon nzType="close" nzTheme="outline" style="cursor: pointer;" (click)="showChatCard = !showChatCard"></i>
+  </ng-template>
+  <button nz-button *ngIf="!showChatCard" nzType="default" [nzSize]="'large'" nzShape="circle" (click)="showChatCard = !showChatCard" class="shadow"><i nz-icon nzType="message" nzTheme="outline"></i></button>
+</div>
 <div id="a"></div>

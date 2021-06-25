@@ -1,5 +1,5 @@
 <nz-layout>
-  <nz-header style="display: flex; justify-content: space-between;">
+  <nz-header style="display: flex; justify-content: space-between; position:absolute; z-index:900;width: 100%;">
     <div routerLink='/' class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="horizontal">
       <li *ngIf="!logged" routerLink='/login' nz-menu-item>登录</li>

@@ -26,7 +26,6 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ChatComponent } from './components/chat/chat.component';
 import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
-import { MessageComponent } from './components/message/message.component';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzMentionModule } from 'ng-zorro-antd/mention';
@@ -56,7 +55,6 @@ registerLocaleData(en);
     RegisterComponent,
     GameComponent,
     ChatComponent,
-    MessageComponent,
     ProfileComponent,
     GameHistoryComponent,
     HanoiHistoryComponent,
@@ -89,7 +87,7 @@ registerLocaleData(en);
       {
         path: "", component: LayoutComponent,
         children: [{
-          path: '', component: GameComponent,
+          path: '', component: GameSceneComponent,
         }, {
           path: 'profile', component: ProfileComponent,
         }],

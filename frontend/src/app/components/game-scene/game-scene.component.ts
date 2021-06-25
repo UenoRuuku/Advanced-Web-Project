@@ -23,6 +23,8 @@ class hanoi {
   styleUrls: ['./game-scene.component.css']
 })
 export class GameSceneComponent implements OnInit {
+  showChatCard: boolean=false;
+
   private scene: Scene;
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;

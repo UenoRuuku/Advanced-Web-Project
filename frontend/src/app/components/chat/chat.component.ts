@@ -59,7 +59,6 @@ export class ChatComponent implements OnInit {
             this.showUserList = this.userList
           }
           this.userList = Array.from(new Set(this.userList).add("everybody"))
-          console.log(this.userList)
           break;
         }
       }
@@ -69,7 +68,6 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {}
 
   sendMessage(): void {
-    console.log(this.atList)
     console.log("new message from client to websocket: ", this.sendingMessage);
     this.chatService.messages.next(this.sendingMessage);
     this.sendingMessage = {
@@ -85,6 +83,8 @@ export class ChatComponent implements OnInit {
     let lastScrollTop = chatBox.scrollTop;
     let interval = setInterval(function(){
       chatBox.scrollTop++;
+      console.log(chatBox.scrollTop)
+      console.log(lastScrollTop)
       if(chatBox.scrollTop===lastScrollTop){
         clearInterval(interval); // 停止，防止无法向上滚动查看历史消息
       }else{
@@ -94,7 +94,6 @@ export class ChatComponent implements OnInit {
   }
 
   onSelect(suggestion: string): void {
-    console.log("onSelect "+suggestion)
     if(suggestion === "everybody"){
       this.atList = new Set()
       this.atList.add("everybody")
@@ -110,7 +109,6 @@ export class ChatComponent implements OnInit {
   }
 
   onTo(user: string): void {
-    console.log("onTo "+user)
     this.sendingMessage.to = Array.from(new Set(this.sendingMessage.to).add(user))
   }
 
