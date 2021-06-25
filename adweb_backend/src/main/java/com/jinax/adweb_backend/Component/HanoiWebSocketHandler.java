@@ -335,6 +335,14 @@ public class HanoiWebSocketHandler implements WebSocketHandler {
         public void setTarget(int[] target) {
             this.target = target;
         }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
     }
 
 }
