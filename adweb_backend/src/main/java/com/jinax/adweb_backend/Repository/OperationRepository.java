@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.MapKey;
 import java.util.List;
 import java.util.Map;
 
@@ -18,5 +19,5 @@ public interface OperationRepository extends JpaRepository<Operation,Integer> {
 //    public List<Map<String,Integer>> getAllOperationsByUserIdAndGameId(String username, Integer gameId);
     @Modifying
     @Query(value = "insert into operation (user_id, `from`, `to`, plate_size) VALUES (':#{#o.userId}',':#{#o.from}',':#{#o.to}',':#{#o.plateSize}')",nativeQuery = true)
-    public Operation insertOperation(Operation o);
+    public void insertOperation(Operation o);
 }

@@ -26,8 +26,8 @@ public class OperationService {
 
 
     public int insertOperation(Operation operation){
-        Operation save = operationRepository.insertOperation(operation);
-        return save.getId();
+        operationRepository.insertOperation(operation);
+        return operation.getId();
     }
 
     public List<Map<String,Integer>> getOperationsByUsernameAndGameId(String username,int gameId){
