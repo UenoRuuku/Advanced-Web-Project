@@ -45,6 +45,7 @@ public class GameHistoryService {
      * @throws  RuntimeException if update db failed
      */
     public boolean updateStepNum(int gameId){
-        return gameHistoryRepository.updateStepNum(gameId);
+        gameHistoryRepository.updateStepNum(gameId);
+        return true;
     }
 }

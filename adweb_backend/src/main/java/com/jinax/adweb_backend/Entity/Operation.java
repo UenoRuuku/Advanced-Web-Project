@@ -15,7 +15,7 @@ public class Operation {
     private Integer userId;
     @Column(name = "`from`",nullable = false)
     private Short from;
-    @Column(nullable = false)
+    @Column(name = "`to`",nullable = false)
     private Short to;
     @Column(nullable = false)
     private Short plateSize;
