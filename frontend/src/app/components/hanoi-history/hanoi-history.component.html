@@ -16,15 +16,60 @@
   <tbody>
     <tr *ngFor="let data of hanoiHistoryData">
       <td>{{ data.id }}</td>
-      <td [innerHtml]="data.firstTowerHtml"></td>
-      <td [innerHtml]="data.secondTowerHtml"></td>
-      <td [innerHtml]="data.thirdTowerHtml"></td>
-      <td>{{ data.lastOperationName }}</td>
       <td>
-        <a nz-button nzType="link" (click)="wantHanoiCallback(data.id)"
-          >查看详情</a
+        <nz-tag *ngIf="containPlate(data.firstTower, '1')" [nzColor]="'cyan'"
+          >1</nz-tag
+        >
+        <nz-tag *ngIf="containPlate(data.firstTower, '2')" [nzColor]="'blue'"
+          >2</nz-tag
+        >
+        <nz-tag
+          *ngIf="containPlate(data.firstTower, '3')"
+          [nzColor]="'geekblue'"
+          >3</nz-tag
+        >
+        <nz-tag *ngIf="containPlate(data.firstTower, '4')" [nzColor]="'purple'"
+          >4</nz-tag
+        >
+        <nz-tag *ngIf="isNullOrIllegal(data.firstTower)">空</nz-tag>
+      </td>
+      <td>
+        <nz-tag *ngIf="containPlate(data.secondTower, '1')" [nzColor]="'cyan'"
+          >1</nz-tag
+        >
+        <nz-tag *ngIf="containPlate(data.secondTower, '2')" [nzColor]="'blue'"
+          >2</nz-tag
+        >
+        <nz-tag
+          *ngIf="containPlate(data.secondTower, '3')"
+          [nzColor]="'geekblue'"
+          >3</nz-tag
+        >
+        <nz-tag *ngIf="containPlate(data.secondTower, '4')" [nzColor]="'purple'"
+          >4</nz-tag
+        >
+        <nz-tag *ngIf="isNullOrIllegal(data.secondTower)">空</nz-tag>
+      </td>
+      <td>
+        <nz-tag *ngIf="containPlate(data.thirdTower, '1')" [nzColor]="'cyan'"
+          >1</nz-tag
+        >
+        <nz-tag *ngIf="containPlate(data.thirdTower, '2')" [nzColor]="'blue'"
+          >2</nz-tag
+        >
+        <nz-tag
+          *ngIf="containPlate(data.thirdTower, '3')"
+          [nzColor]="'geekblue'"
+          >3</nz-tag
+        >
+        <nz-tag *ngIf="containPlate(data.thirdTower, '4')" [nzColor]="'purple'"
+          >4</nz-tag
+        >
+        <nz-tag *ngIf="isNullOrIllegal(data.thirdTower)"
+          >空</nz-tag
         >
       </td>
+      <td>{{ data.username }}</td>
     </tr>
   </tbody>
 </nz-table>

@@ -43,30 +43,20 @@ export class HanoiHistoryComponent implements OnInit {
     }
   }
 
+  containPlate(tower, i){
+    if(tower.search(i)!=-1) return true;
+    else return false;
+  }
+
+  isNullOrIllegal(tower){
+    if(tower.search(1)===-1&&tower.search(2)===-1&&tower.search(3)===-1&&tower.search(4)===-1) return true;
+    else return false
+  }
+
   ngOnInit(): void {
     let gameId = localStorage.getItem("gameDetailId");
     this.http.get(`/history/hanoi/all/${gameId}`).subscribe(<array>(val) => {
       console.log(val);
-      for(let i=0; i<val.length;i++){
-        val[i].firstTowerHtml = "";
-        val[i].secondTowerHtml = "";
-        val[i].thirdTowerHtml = "";
-        for (let j = 0; j < val[i].firstTower.length; j++) {
-          val[i].firstTowerHtml += this.getPlateHtml(val[i].firstTower[j]);
-        }
-        val[i].firstTowerHtml = this.sanitizer.bypassSecurityTrustHtml(val[i].firstTowerHtml);
-        for (let j = 0; j < val[i].secondTower.length; j++) {
-          val[i].secondTowerHtml += this.getPlateHtml(val[i].secondTower[j]);
-        }
-        val[i].secondTowerHtml = this.sanitizer.bypassSecurityTrustHtml(val[i].secondTowerHtml);
-        for (let j = 0; j < val[i].thirdTower.length; j++) {
-          val[i].thirdTowerHtml += this.getPlateHtml(val[i].thirdTower[j]);
-        }
-        val[i].thirdTowerHtml = this.sanitizer.bypassSecurityTrustHtml(val[i].thirdTowerHtml);
-        if(val[i].firstTowerHtml === "") val[i].firstTowerHtml = "空";
-        if(val[i].secondTowerHtml === "") val[i].secondTowerHtml = "空";
-        if(val[i].thirdTowerHtml === "") val[i].thirdTowerHtml = "空";
-      }
       this.hanoiHistoryData = val;
     });
     // this.http.get(`/history/hanoi/operation/chara/2`).subscribe(

@@ -38,6 +38,7 @@ import { NzPipesModule } from 'ng-zorro-antd/pipes';
 import { NzStatisticModule } from 'ng-zorro-antd/statistic';
 import { HanoiHistoryComponent } from './components/hanoi-history/hanoi-history.component';
 import { GameSceneComponent } from './components/game-scene/game-scene.component';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 const ngZorroConfig: NzConfig = {
   // 注意组件名称没有 nz 前缀
@@ -80,6 +81,7 @@ registerLocaleData(en);
     NzSpinModule,
     NzGridModule,
     NzPipesModule,
+    NzTagModule,
     NzStatisticModule,
     NzMentionModule,
     NzDividerModule,
