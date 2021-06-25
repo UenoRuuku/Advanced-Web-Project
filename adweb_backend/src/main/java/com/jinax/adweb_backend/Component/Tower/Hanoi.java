@@ -57,7 +57,7 @@ public class Hanoi {
         this.second = new LinkedList<>();
         this.third = new LinkedList<>();
         for(int i = 0;i < numPlates;i++){
-            first.offer(new Plate(i + 1));
+            second.offer(new Plate(i + 1));
         }
     }
 
