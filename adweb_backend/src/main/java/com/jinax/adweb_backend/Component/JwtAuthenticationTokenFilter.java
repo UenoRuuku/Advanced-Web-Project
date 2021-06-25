@@ -44,7 +44,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             authUserByToken(request, authToken);
         }else{
             String requestURI = request.getRequestURI().substring(1);
-            String pattern = "(chat|server)/.*";
+            String pattern = "(chat|hanoi)/.*";
             if(Pattern.matches(pattern,requestURI)){
                 int i = requestURI.indexOf("/");
                 String authToken = requestURI.substring(i + 1);
@@ -66,7 +66,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 LOGGER.info("authenticated user:{}", username);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                request.getSession(true).setAttribute("username",((MyUserDetails)userDetails).getUsername());
+                request.getSession(true).setAttribute("username",username);
             }
         }
     }
