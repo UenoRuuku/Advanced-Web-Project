@@ -13,7 +13,7 @@ public class Operation {
     private Integer id;
     @Column(nullable = false)
     private Integer userId;
-    @Column(nullable = false)
+    @Column(name = "`from`",nullable = false)
     private Short from;
     @Column(nullable = false)
     private Short to;
